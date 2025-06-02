@@ -4,8 +4,10 @@ docs/site/
 manual_test/
 
 # data
-/data/
-/data/**
+data/*
+
+# Aber behalte .gitkeep
+!data/.gitkeep
 
 # other local dev info
 .vscode/
