@@ -2,28 +2,45 @@ from pathlib import Path
 
 import typer
 from torch.utils.data import Dataset
+from datasets import load_dataset, DatasetDict
+from sklearn.model_selection import train_test_split
+import os
 
+from pathlib import Path
+import os
 
-class MyDataset(Dataset):
-    """My custom dataset."""
+import typer
+from datasets import load_dataset, DatasetDict
 
-    def __init__(self, data_path: Path) -> None:
-        self.data_path = data_path
+ROOT_DIR = Path(__file__).resolve().parents[2]
+DEFAULT_SAVE_PATH = ROOT_DIR / "data" / "processed"
 
-    def __len__(self) -> int:
-        """Return the length of the dataset."""
+def load_and_prepare_dataset(
+    split_val: float = 0.25,
+    seed: int = 42,
+    save_path: str = None
+):
+    if save_path is None:
+        save_path = DEFAULT_SAVE_PATH
+    else:
+        save_path = Path(save_path)
 
-    def __getitem__(self, index: int):
-        """Return a given sample from the dataset."""
+    # 1. Load dataset
+    ds = load_dataset("thefrankhsu/hate_speech_twitter")
 
-    def preprocess(self, output_folder: Path) -> None:
-        """Preprocess the raw data and save it to the output folder."""
+    # 2. Split train into train + val
+    train_valid = ds["train"].train_test_split(test_size=split_val, seed=seed)
 
-def preprocess(data_path: Path, output_folder: Path) -> None:
-    print("Preprocessing data...")
-    dataset = MyDataset(data_path)
-    dataset.preprocess(output_folder)
+    # 3. Recombine
+    full_dataset = DatasetDict({
+        "train": train_valid["train"],
+        "validation": train_valid["test"],
+        "test": ds["test"]
+    })
 
+    # 4. Save
+    full_dataset.save_to_disk(str(save_path))
+    print(f"Dataset saved to {save_path}")
 
 if __name__ == "__main__":
-    typer.run(preprocess)
+    typer.run(load_and_prepare_dataset)

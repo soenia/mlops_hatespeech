@@ -3,6 +3,10 @@ docs/site/
 # test cache
 manual_test/
 
+# data
+/data/
+/data/**
+
 # other local dev info
 .vscode/
 
