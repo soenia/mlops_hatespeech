@@ -3,6 +3,12 @@ docs/site/
 # test cache
 manual_test/
 
+# data
+data/*
+
+# Aber behalte .gitkeep
+!data/.gitkeep
+
 # other local dev info
 .vscode/
 
