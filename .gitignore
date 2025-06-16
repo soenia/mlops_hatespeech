@@ -6,6 +6,9 @@ manual_test/
 # data
 data/*
 
+# logs
+logs/*
+
 # Aber behalte .gitkeep
 !data/.gitkeep
 
