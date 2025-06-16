@@ -1,6 +1,9 @@
 import os
+
 from datasets import load_from_disk
+
 from src.mlops_hatespeech.data import load_and_prepare_dataset
+
 
 def test_data(tmp_path):
     """Test loading and preparing the dataset."""

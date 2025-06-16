@@ -1,5 +1,6 @@
-from mlops_hatespeech.model import Model
 from mlops_hatespeech.data import MyDataset
+from mlops_hatespeech.model import Model
+
 
 def train():
     dataset = MyDataset("data/raw")

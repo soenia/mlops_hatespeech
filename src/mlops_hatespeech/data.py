@@ -1,10 +1,9 @@
 from pathlib import Path
 
-from torch.utils.data import Dataset
-from datasets import load_dataset, DatasetDict
-from sklearn.model_selection import train_test_split
 import typer
-from datasets import load_dataset, DatasetDict
+from datasets import DatasetDict, load_dataset
+from sklearn.model_selection import train_test_split
+from torch.utils.data import Dataset
 
 ROOT_DIR = Path(__file__).resolve().parents[2]
 DEFAULT_SAVE_PATH = ROOT_DIR / "data" / "processed"
