@@ -33,3 +33,6 @@ select = ["I", "N", "E", "W", ]
 
 [tool.coverage.run]
 omit = ["tests/*"]
+
+[project.scripts]
+train = "mlops_hatespeech.train:app"
