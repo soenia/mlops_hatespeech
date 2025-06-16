@@ -1,19 +1,21 @@
+import os
+import random
+
+import matplotlib.pyplot as plt
+import numpy as np
+import torch
+import torch.nn as nn
+import typer
+from datasets import load_from_disk
+from sklearn.metrics import accuracy_score, f1_score
 from transformers import (
     AutoModelForSequenceClassification,
     AutoTokenizer,
     Trainer,
     TrainingArguments,
 )
-from datasets import load_from_disk
-from sklearn.metrics import f1_score, accuracy_score
-import os
-import random
-import matplotlib.pyplot as plt
-import numpy as np
-import torch
-import torch.nn as nn
+
 from mlops_hatespeech.model import MODEL_STR
-import typer
 
 app = typer.Typer()
 
@@ -21,8 +23,6 @@ app = typer.Typer()
 def train(wd : float = 1e-3, lr : float = 2e-5, epochs : int = 5, seed : int = 42) -> None:
     """Train a model."""
     ds = load_from_disk("data/processed")
-
-    DEVICE = "cpu"
 
     idx2lbl = {
         0: "non-hate",
@@ -56,10 +56,10 @@ def train(wd : float = 1e-3, lr : float = 2e-5, epochs : int = 5, seed : int = 4
     def compute_metrics(eval_preds):
         logits, labels = eval_preds.predictions, eval_preds.label_ids
         pred_labels = np.argmax(logits, axis=-1)
-        
+
         f1 = f1_score(y_true=labels, y_pred=pred_labels, average="weighted")
         acc = accuracy_score(y_true=labels, y_pred=pred_labels)
-        
+
         return {
             "f1": f1,
             "accuracy": acc
