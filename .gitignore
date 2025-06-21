@@ -3,18 +3,15 @@ docs/site/
 # test cache
 manual_test/
 
-# data
-data/*
-
 # logs
 logs/*
 
-# Aber behalte .gitkeep
-!data/.gitkeep
+# data
+data/*
 
-# keep this for dvc
-!data/processed/
+# keep this for dvc (and gitkeep)
 !data/processed.dvc
+!data/.gitkeep
 
 # other local dev info
 .vscode/
