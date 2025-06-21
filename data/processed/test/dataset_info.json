@@ -1,0 +1,56 @@
+{
+  "builder_name": "csv",
+  "citation": "",
+  "config_name": "default",
+  "dataset_name": "hate_speech_twitter",
+  "dataset_size": 590787,
+  "description": "",
+  "download_checksums": {
+    "hf://datasets/thefrankhsu/hate_speech_twitter@c336a8ec8e44529b7bdfd2ad8e5ea0b434c3b07f/training set.csv": {
+      "num_bytes": 431858,
+      "checksum": null
+    },
+    "hf://datasets/thefrankhsu/hate_speech_twitter@c336a8ec8e44529b7bdfd2ad8e5ea0b434c3b07f/testing set.csv": {
+      "num_bytes": 77659,
+      "checksum": null
+    }
+  },
+  "download_size": 509517,
+  "features": {
+    "tweet": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "label": {
+      "dtype": "int64",
+      "_type": "Value"
+    },
+    "categories": {
+      "dtype": "string",
+      "_type": "Value"
+    }
+  },
+  "homepage": "",
+  "license": "",
+  "size_in_bytes": 1100304,
+  "splits": {
+    "train": {
+      "name": "train",
+      "num_bytes": 501359,
+      "num_examples": 5679,
+      "dataset_name": "hate_speech_twitter"
+    },
+    "test": {
+      "name": "test",
+      "num_bytes": 89428,
+      "num_examples": 1000,
+      "dataset_name": "hate_speech_twitter"
+    }
+  },
+  "version": {
+    "version_str": "0.0.0",
+    "major": 0,
+    "minor": 0,
+    "patch": 0
+  }
+}
