@@ -12,6 +12,10 @@ logs/*
 # Aber behalte .gitkeep
 !data/.gitkeep
 
+# keep this for dvc
+!data/processed/
+!data/processed.dvc
+
 # other local dev info
 .vscode/
 
