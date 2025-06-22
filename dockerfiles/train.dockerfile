@@ -6,7 +6,6 @@ RUN apt update && \
 
 COPY src src/
 COPY data data/
-#COPY models models/
 COPY reports reports/
 COPY requirements.txt requirements.txt
 COPY requirements_dev.txt requirements_dev.txt
