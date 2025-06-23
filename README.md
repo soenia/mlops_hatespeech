@@ -5,8 +5,8 @@ Text classification of hate speech for MLOps course summer term 2025.
 
 The goal of the project is to use Machine Learning methods to identify hatespeech in given input strings.
 We leverage transformer based models for the binary classification task.
-We use a small version of BERT able to run on CPU as a finetuning basis. 
-We are using a labeled [Huggingface dataset](https://huggingface.co/datasets/thefrankhsu/hate_speech_twitter) containing tweets. The dataset consisits of a training set with 5679 tweets and a test set of 1000 tweets. 
+We use a small version of BERT able to run on CPU as a finetuning basis.
+We are using a labeled [Huggingface dataset](https://huggingface.co/datasets/thefrankhsu/hate_speech_twitter) containing tweets. The dataset consisits of a training set with 5679 tweets and a test set of 1000 tweets.
 
 ## Project structure
 

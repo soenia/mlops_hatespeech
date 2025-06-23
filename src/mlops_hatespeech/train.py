@@ -19,8 +19,9 @@ from mlops_hatespeech.model import MODEL_STR
 
 app = typer.Typer()
 
+
 @app.command()
-def train(wd : float = 1e-3, lr : float = 2e-5, epochs : int = 5, seed : int = 42) -> None:
+def train(wd: float = 1e-3, lr: float = 2e-5, epochs: int = 5, seed: int = 42) -> None:
     """Train a model."""
     ds = load_from_disk("data/processed")
 
@@ -60,10 +61,7 @@ def train(wd : float = 1e-3, lr : float = 2e-5, epochs : int = 5, seed : int = 4
         f1 = f1_score(y_true=labels, y_pred=pred_labels, average="weighted")
         acc = accuracy_score(y_true=labels, y_pred=pred_labels)
 
-        return {
-            "f1": f1,
-            "accuracy": acc
-        }
+        return {"f1": f1, "accuracy": acc}
 
     training_args = TrainingArguments(
         output_dir="./logs/run1",
@@ -84,7 +82,7 @@ def train(wd : float = 1e-3, lr : float = 2e-5, epochs : int = 5, seed : int = 4
         dataloader_num_workers=0,
         load_best_model_at_end=False,
         report_to=None,
-        no_cuda=True
+        no_cuda=True,
     )
 
     trainer = Trainer(
@@ -97,6 +95,7 @@ def train(wd : float = 1e-3, lr : float = 2e-5, epochs : int = 5, seed : int = 4
     )
     trainer.train()
     print("Training is done.")
+
 
 if __name__ == "__main__":
     app()
