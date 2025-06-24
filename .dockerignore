@@ -1,0 +1,9 @@
+# Ignoriere unnötige Dateien
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.swp
+*.tmp
+.env
+*.env

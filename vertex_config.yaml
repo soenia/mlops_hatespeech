@@ -1,0 +1,16 @@
+serviceAccount: train-vm-sa@mlops-hatespeech.iam.gserviceaccount.com
+workerPoolSpecs:
+  - machineSpec:
+      machineType: n1-highmem-2
+    replicaCount: 1
+    containerSpec:
+      imageUri: europe-west1-docker.pkg.dev/mlops-hatespeech/hs-images/train
+      command:
+        - bash
+      args:
+        - -c
+        - |
+          dvc pull data/processed.dvc && \
+          python src/mlops_hatespeech/train.py --epochs 10 && \
+          dvc add logs/run1 && \
+          dvc push
