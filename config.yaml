@@ -10,4 +10,3 @@ workerPoolSpecs:
         - bash
         - -c
         - python src/mlops_hatespeech/data.py && python src/mlops_hatespeech/train.py
-      
