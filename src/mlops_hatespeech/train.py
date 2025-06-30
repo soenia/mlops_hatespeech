@@ -35,8 +35,6 @@ def train(wd: float = 1e-3, lr: float = 2e-5, epochs: int = 5, seed: int = 42) -
 
     def tokenize_seqs(examples):
         texts = examples["tweet"]
-        print(f"Type of examples['tweet']: {type(texts)}")
-        print(f"First example: {texts[0]}")
         return tokenizer(texts, truncation=True, max_length=512)
 
     def is_valid(example):
@@ -61,8 +59,10 @@ def train(wd: float = 1e-3, lr: float = 2e-5, epochs: int = 5, seed: int = 42) -
         f1 = f1_score(y_true=labels, y_pred=pred_labels, average="weighted")
         acc = accuracy_score(y_true=labels, y_pred=pred_labels)
 
-        return {"f1": f1, "accuracy": acc}
-
+        return {
+            "f1": f1,
+            "accuracy": acc
+        }
     training_args = TrainingArguments(
         output_dir="./logs/run1",
         per_device_train_batch_size=32,

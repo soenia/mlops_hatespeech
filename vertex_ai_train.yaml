@@ -1,0 +1,38 @@
+steps:
+- name: "alpine"
+  id: "Replace values in the training config"
+  entrypoint: "sh"
+  args:
+    - '-c'
+    - |
+      apk add --no-cache gettext
+      envsubst < vertex_config.yaml > vertex_config.yaml.tmp
+      mv vertex_config.yaml.tmp vertex_config.yaml
+  secretEnv: ['GOOGLE_APPLICATION_CREDENTIALS']
+
+- name: 'alpine'
+  id: "Show config"
+  waitFor: ['Replace values in the training config']
+  entrypoint: "sh"
+  args:
+    - '-c'
+    - |
+      cat vertex_config.yaml
+
+- name: 'gcr.io/cloud-builders/gcloud'
+  id: 'Train on vertex AI'
+  waitFor: ['Replace values in the training config']
+  args:
+    [
+      'ai', 'custom-jobs', 'create',
+      '--region', 'europe-west1',
+      '--display-name', 'dvc-train-job',
+      '--config', '${_VERTEX_TRAIN_CONFIG}',
+    ]
+substitutions:
+  _VERTEX_TRAIN_CONFIG: 'vertex_config.yaml'
+
+availableSecrets:
+  secretManager:
+    - versionName: projects/mlops-hatespeech/secrets/dvc-sa-key/versions/latest
+      env: 'GOOGLE_APPLICATION_CREDENTIALS'
