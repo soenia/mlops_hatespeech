@@ -1,5 +1,6 @@
 import os
 import random
+from typing import List, Optional
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -7,6 +8,8 @@ import torch
 import torch.nn as nn
 import typer
 from datasets import load_from_disk
+from hydra import compose, initialize
+from omegaconf import DictConfig
 from sklearn.metrics import accuracy_score, f1_score
 from transformers import (
     AutoModelForSequenceClassification,
@@ -20,9 +23,33 @@ from mlops_hatespeech.model import MODEL_STR
 app = typer.Typer()
 
 
+def get_config(overrides: Optional[List[str]]) -> DictConfig:
+    """Get the configuration from Hydra."""
+    with initialize(config_path="../..", job_name="train_app"):
+        return compose(config_name="config", overrides=overrides or [])
+
+
 @app.command()
-def train(wd: float = 1e-3, lr: float = 2e-5, epochs: int = 5, seed: int = 42) -> None:
+def train(
+    lr: Optional[float] = None,
+    wd: Optional[float] = None,
+    epochs: Optional[int] = None,
+    seed: Optional[int] = None,
+) -> None:
     """Train a model."""
+
+    overrides = []
+    if lr is not None:
+        overrides.append(f"hyperparameters.lr={lr}")
+    if wd is not None:
+        overrides.append(f"hyperparameters.wd={wd}")
+    if epochs is not None:
+        overrides.append(f"hyperparameters.epochs={epochs}")
+    if seed is not None:
+        overrides.append(f"hyperparameters.seed={seed}")
+
+    cfg = get_config(overrides)
+
     ds = load_from_disk("data/processed")
 
     idx2lbl = {
@@ -59,30 +86,28 @@ def train(wd: float = 1e-3, lr: float = 2e-5, epochs: int = 5, seed: int = 42) -
         f1 = f1_score(y_true=labels, y_pred=pred_labels, average="weighted")
         acc = accuracy_score(y_true=labels, y_pred=pred_labels)
 
-        return {
-            "f1": f1,
-            "accuracy": acc
-        }
+        return {"f1": f1, "accuracy": acc}
+
     training_args = TrainingArguments(
         output_dir="./logs/run1",
-        per_device_train_batch_size=32,
-        per_gpu_eval_batch_size=128,
-        gradient_accumulation_steps=2,
-        learning_rate=lr,
-        weight_decay=wd,
-        num_train_epochs=epochs,
-        logging_strategy="steps",
-        logging_steps=100,
-        save_strategy="epoch",
-        eval_strategy="steps",
-        eval_steps=100,
-        save_total_limit=1,
-        seed=seed,
-        data_seed=seed,
-        dataloader_num_workers=0,
-        load_best_model_at_end=False,
-        report_to=None,
-        no_cuda=True,
+        per_device_train_batch_size=cfg.hyperparameters.per_device_train_batch_size,
+        per_gpu_eval_batch_size=cfg.hyperparameters.per_gpu_eval_batch_size,
+        gradient_accumulation_steps=cfg.hyperparameters.gradient_accumulation_steps,
+        learning_rate=cfg.hyperparameters.lr,
+        weight_decay=cfg.hyperparameters.wd,
+        num_train_epochs=cfg.hyperparameters.epochs,
+        logging_strategy=cfg.hyperparameters.logging_strategy,
+        logging_steps=cfg.hyperparameters.logging_steps,
+        save_strategy=cfg.hyperparameters.save_strategy,
+        eval_strategy=cfg.hyperparameters.eval_strategy,
+        eval_steps=cfg.hyperparameters.eval_steps,
+        save_total_limit=cfg.hyperparameters.save_total_limit,
+        seed=cfg.hyperparameters.seed,
+        data_seed=cfg.hyperparameters.seed,
+        dataloader_num_workers=cfg.hyperparameters.dataloader_num_workers,
+        load_best_model_at_end=cfg.hyperparameters.load_best_model_at_end,
+        report_to=cfg.hyperparameters.report_to,
+        no_cuda=cfg.hyperparameters.no_cuda,
     )
 
     trainer = Trainer(
