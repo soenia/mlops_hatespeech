@@ -5,6 +5,7 @@ manual_test/
 
 # logs
 logs/*
+!logs/*.dvc
 
 # data
 data/*
@@ -186,5 +187,7 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 
-# hyrda creates a folder output/ in the root of the project
+# hydra creates a folder output/ in the root of the project
 outputs/
+
+/models

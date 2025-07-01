@@ -1,0 +1,81 @@
+outs:
+- hash: md5
+  path: run1
+  files:
+  - relpath: checkpoint-335/config.json
+    md5: 1b43c6996c2dbab8ef71dd06aafb2939
+    size: 761
+    cloud:
+      remote_storage:
+        etag: 08d1a085b1e6878e031001
+        version_id: '1750690512851025'
+  - relpath: checkpoint-335/model.safetensors
+    md5: ddca028dbcdaa713f07453129b4fe02c
+    size: 17549312
+    cloud:
+      remote_storage:
+        etag: 08ebb6edb0e6878e031001
+        version_id: '1750690512460651'
+  - relpath: checkpoint-335/optimizer.pt
+    md5: a7141c9db5375040de19b1c734e0cb4a
+    size: 35123211
+    cloud:
+      remote_storage:
+        etag: 0889b186c5e6878e031001
+        version_id: '1750690554812553'
+  - relpath: checkpoint-335/rng_state.pth
+    md5: 076734075a439c5514c3bb153d74dfc6
+    size: 14455
+    cloud:
+      remote_storage:
+        etag: 08ba9188b1e6878e031001
+        version_id: '1750690512898234'
+  - relpath: checkpoint-335/scheduler.pt
+    md5: 5ea634c7dc010f320bbcbbdf06b626bc
+    size: 1465
+    cloud:
+      remote_storage:
+        etag: 08b59686b1e6878e031001
+        version_id: '1750690512866101'
+  - relpath: checkpoint-335/special_tokens_map.json
+    md5: 29ba428df177361130afa82cf0883098
+    size: 125
+    cloud:
+      remote_storage:
+        etag: 08b3a286b1e6878e031001
+        version_id: '1750690512867635'
+  - relpath: checkpoint-335/tokenizer.json
+    md5: 8d46e7d5827bb296905d199ff3d2042d
+    size: 711494
+    cloud:
+      remote_storage:
+        etag: 08aed793b3e6878e031001
+        version_id: '1750690517281710'
+  - relpath: checkpoint-335/tokenizer_config.json
+    md5: 0b5cf7909b88b1b7b8e6283ed9140e8d
+    size: 1300
+    cloud:
+      remote_storage:
+        etag: 08bfa586b1e6878e031001
+        version_id: '1750690512868031'
+  - relpath: checkpoint-335/trainer_state.json
+    md5: 142ff797e530a3754255bff54870169a
+    size: 2175
+    cloud:
+      remote_storage:
+        etag: 089db3fbb0e6878e031001
+        version_id: '1750690512689565'
+  - relpath: checkpoint-335/training_args.bin
+    md5: bca235560726a7b815bebd8fecf6c03a
+    size: 5649
+    cloud:
+      remote_storage:
+        etag: 08c99088b1e6878e031001
+        version_id: '1750690512898121'
+  - relpath: checkpoint-335/vocab.txt
+    md5: 64800d5d8528ce344256daf115d4965e
+    size: 231508
+    cloud:
+      remote_storage:
+        etag: 08debde8b2e6878e031001
+        version_id: '1750690516573918'

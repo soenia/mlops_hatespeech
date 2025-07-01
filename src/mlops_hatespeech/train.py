@@ -1,15 +1,15 @@
 import os
 import random
+from typing import List, Optional
 
 import matplotlib.pyplot as plt
 import numpy as np
 import torch
 import torch.nn as nn
 import typer
-from typing import List, Optional
-from omegaconf import DictConfig
-from hydra import compose, initialize
 from datasets import load_from_disk
+from hydra import compose, initialize
+from omegaconf import DictConfig
 from sklearn.metrics import accuracy_score, f1_score
 from transformers import (
     AutoModelForSequenceClassification,
@@ -22,10 +22,12 @@ from mlops_hatespeech.model import MODEL_STR
 
 app = typer.Typer()
 
+
 def get_config(overrides: Optional[List[str]]) -> DictConfig:
     """Get the configuration from Hydra."""
     with initialize(config_path="../..", job_name="train_app"):
         return compose(config_name="config", overrides=overrides or [])
+
 
 @app.command()
 def train(
@@ -33,7 +35,7 @@ def train(
     wd: Optional[float] = None,
     epochs: Optional[int] = None,
     seed: Optional[int] = None,
-    ) -> None:
+) -> None:
     """Train a model."""
 
     overrides = []
@@ -60,8 +62,6 @@ def train(
 
     def tokenize_seqs(examples):
         texts = examples["tweet"]
-        print(f"Type of examples['tweet']: {type(texts)}")
-        print(f"First example: {texts[0]}")
         return tokenizer(texts, truncation=True, max_length=512)
 
     def is_valid(example):
@@ -86,13 +86,10 @@ def train(
         f1 = f1_score(y_true=labels, y_pred=pred_labels, average="weighted")
         acc = accuracy_score(y_true=labels, y_pred=pred_labels)
 
-        return {
-            "f1": f1,
-            "accuracy": acc
-        }
+        return {"f1": f1, "accuracy": acc}
 
     training_args = TrainingArguments(
-        output_dir='./logs/run1',
+        output_dir="./logs/run1",
         per_device_train_batch_size=cfg.hyperparameters.per_device_train_batch_size,
         per_gpu_eval_batch_size=cfg.hyperparameters.per_gpu_eval_batch_size,
         gradient_accumulation_steps=cfg.hyperparameters.gradient_accumulation_steps,
@@ -100,11 +97,11 @@ def train(
         weight_decay=cfg.hyperparameters.wd,
         num_train_epochs=cfg.hyperparameters.epochs,
         logging_strategy=cfg.hyperparameters.logging_strategy,
-        logging_steps= cfg.hyperparameters.logging_steps,
-        save_strategy= cfg.hyperparameters.save_strategy,
-        eval_strategy= cfg.hyperparameters.eval_strategy,
-        eval_steps= cfg.hyperparameters.eval_steps,
-        save_total_limit= cfg.hyperparameters.save_total_limit,
+        logging_steps=cfg.hyperparameters.logging_steps,
+        save_strategy=cfg.hyperparameters.save_strategy,
+        eval_strategy=cfg.hyperparameters.eval_strategy,
+        eval_steps=cfg.hyperparameters.eval_steps,
+        save_total_limit=cfg.hyperparameters.save_total_limit,
         seed=cfg.hyperparameters.seed,
         data_seed=cfg.hyperparameters.seed,
         dataloader_num_workers=cfg.hyperparameters.dataloader_num_workers,
@@ -123,6 +120,7 @@ def train(
     )
     trainer.train()
     print("Training is done.")
+
 
 if __name__ == "__main__":
     app()
