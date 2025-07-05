@@ -1,9 +1,10 @@
 import torch
 from datasets import Dataset, DatasetDict
-from mlops_hatespeech.model import MODEL_STR
-from mlops_hatespeech.train import train, train_model
 from omegaconf import OmegaConf
 from transformers import AutoModelForSequenceClassification, AutoTokenizer, Trainer, TrainingArguments
+
+from mlops_hatespeech.model import MODEL_STR
+from mlops_hatespeech.train import train_model
 
 
 def test_model_instantiation():
@@ -19,7 +20,7 @@ def test_model_instantiation():
 
 def test_train_model(tmp_path):
     # Create a dummy dataset
-    data = {"tweet": ["Hate speech", "Nice words"], "labels": [1, 0]}
+    data = {"tweet": ["Hate speech", "Nice words"], "label": [1, 0]}
     ds = Dataset.from_dict(data)
     ds_dict = DatasetDict({"train": ds, "validation": ds})
 
@@ -28,6 +29,7 @@ def test_train_model(tmp_path):
 
     cfg = OmegaConf.create(
         {
+            "data_path": str(dataset_path),
             "hyperparameters": {
                 "lr": 2e-5,
                 "epochs": 1,
@@ -48,7 +50,7 @@ def test_train_model(tmp_path):
                 "use_cpu": True,
                 "dataloader_num_workers": 0,
                 "gradient_accumulation_steps": 2,
-            }
+            },
         }
     )
 

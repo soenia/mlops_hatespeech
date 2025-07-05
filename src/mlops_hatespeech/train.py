@@ -30,7 +30,7 @@ def get_config(overrides: Optional[List[str]]) -> DictConfig:
 
 
 def train_model(cfg: DictConfig) -> Trainer:
-    ds = load_from_disk("data/processed")
+    ds = load_from_disk(cfg.data_path)
 
     idx2lbl = {
         0: "non-hate",
