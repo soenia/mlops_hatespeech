@@ -1,0 +1,6 @@
+outs:
+- md5: ac4713fba0c346aa1278b83e8163da4c
+  size: 11
+  isexec: true
+  hash: md5
+  path: testfile.txt
