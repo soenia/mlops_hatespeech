@@ -24,7 +24,7 @@ hyperparameters:
     eval_strategy: "steps"
     eval_steps: 100
     save_total_limit: 1
-    no_cuda: true
+    use_cpu: true
     load_best_model_at_end: false
     report_to: null
     dataloader_num_workers: 0
