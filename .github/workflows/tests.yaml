@@ -25,6 +25,13 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         pip install -r requirements_tests.txt
-    - name: Test with pytest
+    - name: Run tests with coverage
       run: |
-        pytest -v
+        coverage run --source=src/mlops_hatespeech -m pytest -v
+        coverage report
+        coverage xml
+    - name: Upload coverage report
+      uses: actions/upload-artifact@v4
+      with:
+        name: coverage-report
+        path: coverage.xml
