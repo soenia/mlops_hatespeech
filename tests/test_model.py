@@ -24,6 +24,7 @@ def test_train_model(tmp_path):
     ds_dict = DatasetDict({"train": ds, "validation": ds})
 
     dataset_path = tmp_path / "dummy_data"
+    ds_dict.save_to_disk(str(dataset_path))
 
     cfg = OmegaConf.create(
         {
