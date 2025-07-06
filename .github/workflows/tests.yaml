@@ -36,5 +36,7 @@ jobs:
         coverage run --source=src/mlops_hatespeech -m pytest -v
         coverage report
         coverage xml
-    - name: Upload Coverage to Codecov
+    - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v2
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
