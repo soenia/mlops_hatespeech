@@ -1,0 +1,21 @@
+steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'Build data container image'
+    args: [
+      'build',
+      '.',
+      '-t',
+      'europe-west1-docker.pkg.dev/mlops-hatespeech/hs-images/data',
+      '-f',
+      'dockerfiles/data.dockerfile'
+    ]
+
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'Push data container image'
+    args: [
+      'push',
+      'europe-west1-docker.pkg.dev/mlops-hatespeech/hs-images/data'
+    ]
+
+options:
+  logging: CLOUD_LOGGING_ONLY
