@@ -39,11 +39,11 @@ jobs:
 
     - name: Check data statistics
       run: |
-        python dataset_statistics.py
+        python src/mlops_hatespeech/dataset_statistics.py
 
     - name: Check data statistics & generate report
       run: |
-        python src/example_mlops/data.py > data_statistics.md
+        python src/mlops_hatespeech/data_statistics.py > data_statistics.md
         echo '![](./train_label_distribution.png "Train label distribution")' >> data_statistics.md
         echo '![](./test_label_distribution.png "Test label distribution")' >> data_statistics.md
         echo '![](./validation_label_distribution.png "Validation label distribution")' >> data_statistics.md
