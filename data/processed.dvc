@@ -76,10 +76,10 @@ outs:
     size: 8448
     cloud:
       remote_storage:
-        etag: 088be084d9e1828e031001
-        version_id: '1750517455859723'
-  - relpath: test/cache-e41a6439d8023e6e.arrow
-    md5: ff80dd21b91e29951b30a84ca994f415
+        etag: 08c8a1b4f591a88e031001
+        version_id: '1751801710579912'
+  - relpath: test/cache-d7e890f0da62c0e5.arrow
+    md5: 3c7b1b0b19776c919d7c308aa80be1c7
     size: 218040
     cloud:
       remote_storage:
