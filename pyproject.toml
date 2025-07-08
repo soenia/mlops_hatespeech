@@ -7,7 +7,7 @@ name = "mlops_hatespeech"
 version = "0.0.1"
 description = "Text classification of hate speech for MLOps course summer term 2025."
 authors = [
-  { name = "Alexander Ulbrich, Sophie Hopp, Colin Linke", email = "your@email.com" },
+  { name = "Alexander Ulbrich, Sophie Hopp", email = "your@email.com" },
 ]
 
 keywords = ["machine learning", "MLOps"]
@@ -29,7 +29,7 @@ dev = {file = ['requirements_dev.txt']}
 line-length = 120
 
 [tool.ruff.lint]
-select = ["I", "N", "E", "W", ]
+select = ["N", "E", "W", ]
 
 [tool.coverage.run]
 omit = ["tests/*"]
