@@ -1,0 +1,3 @@
+ignore:
+  - "*/tests/*"
+  - "src/mlops_hatespeech/dataset_statistics.py"

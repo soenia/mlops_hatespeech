@@ -1,1 +1,2 @@
 pytest==8.4.0
+coverage==7.9.2

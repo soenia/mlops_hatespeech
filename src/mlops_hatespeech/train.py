@@ -25,32 +25,12 @@ app = typer.Typer()
 
 def get_config(overrides: Optional[List[str]]) -> DictConfig:
     """Get the configuration from Hydra."""
-    with initialize(config_path="../..", job_name="train_app"):
+    with initialize(config_path="../..", job_name="train_app", version_base="1.1"):
         return compose(config_name="config", overrides=overrides or [])
 
 
-@app.command()
-def train(
-    lr: Optional[float] = None,
-    wd: Optional[float] = None,
-    epochs: Optional[int] = None,
-    seed: Optional[int] = None,
-) -> None:
-    """Train a model."""
-
-    overrides = []
-    if lr is not None:
-        overrides.append(f"hyperparameters.lr={lr}")
-    if wd is not None:
-        overrides.append(f"hyperparameters.wd={wd}")
-    if epochs is not None:
-        overrides.append(f"hyperparameters.epochs={epochs}")
-    if seed is not None:
-        overrides.append(f"hyperparameters.seed={seed}")
-
-    cfg = get_config(overrides)
-
-    ds = load_from_disk("data/processed")
+def train_model(cfg: DictConfig) -> Trainer:
+    ds = load_from_disk(cfg.data_path)
 
     idx2lbl = {
         0: "non-hate",
@@ -107,7 +87,7 @@ def train(
         dataloader_num_workers=cfg.hyperparameters.dataloader_num_workers,
         load_best_model_at_end=cfg.hyperparameters.load_best_model_at_end,
         report_to=cfg.hyperparameters.report_to,
-        no_cuda=cfg.hyperparameters.no_cuda,
+        use_cpu=cfg.hyperparameters.use_cpu,
     )
 
     trainer = Trainer(
@@ -118,7 +98,32 @@ def train(
         eval_dataset=ds["validation"],
         tokenizer=tokenizer,
     )
+
     trainer.train()
+    return trainer
+
+
+@app.command()
+def train(
+    lr: Optional[float] = None,
+    wd: Optional[float] = None,
+    epochs: Optional[int] = None,
+    seed: Optional[int] = None,
+) -> None:
+    """Train a model."""
+
+    overrides = []
+    if lr is not None:
+        overrides.append(f"hyperparameters.lr={lr}")
+    if wd is not None:
+        overrides.append(f"hyperparameters.wd={wd}")
+    if epochs is not None:
+        overrides.append(f"hyperparameters.epochs={epochs}")
+    if seed is not None:
+        overrides.append(f"hyperparameters.seed={seed}")
+
+    cfg = get_config(overrides)
+    trainer = train_model(cfg)
     print("Training is done.")
 
 
