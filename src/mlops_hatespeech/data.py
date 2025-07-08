@@ -5,6 +5,8 @@ from datasets import DatasetDict, load_dataset
 from sklearn.model_selection import train_test_split
 from torch.utils.data import Dataset
 
+from mlops_hatespeech.logger import logger
+
 ROOT_DIR = Path(__file__).resolve().parents[2]
 DEFAULT_SAVE_PATH = ROOT_DIR / "data" / "processed"
 
@@ -19,6 +21,7 @@ def load_and_prepare_dataset(split_val: float = 0.25, seed: int = 42, save_path:
     ds = load_dataset("thefrankhsu/hate_speech_twitter")
 
     # 2. Split train into train + val
+    logger.debug(f"Splitting dataset with split_val={split_val}, seed={seed}")
     train_valid = ds["train"].train_test_split(test_size=split_val, seed=seed)
 
     # 3. Recombine
@@ -26,7 +29,7 @@ def load_and_prepare_dataset(split_val: float = 0.25, seed: int = 42, save_path:
 
     # 4. Save
     full_dataset.save_to_disk(str(save_path))
-    print(f"Dataset saved to {save_path}")
+    logger.info(f"Dataset saved to {save_path}")
 
 
 if __name__ == "__main__":

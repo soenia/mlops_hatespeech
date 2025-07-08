@@ -19,6 +19,8 @@ from transformers import (
 )
 
 from mlops_hatespeech.model import MODEL_STR
+from mlops_hatespeech.logger import logger
+
 
 app = typer.Typer()
 
@@ -30,6 +32,7 @@ def get_config(overrides: Optional[List[str]]) -> DictConfig:
 
 
 def train_model(cfg: DictConfig) -> Trainer:
+    logger.info(f"Loading dataset from: {cfg.data_path}")
     ds = load_from_disk(cfg.data_path)
 
     idx2lbl = {
@@ -124,7 +127,7 @@ def train(
 
     cfg = get_config(overrides)
     trainer = train_model(cfg)
-    print("Training is done.")
+    logger.info("Training is done.")
 
 
 if __name__ == "__main__":
