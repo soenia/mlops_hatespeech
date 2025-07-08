@@ -1,4 +1,4 @@
-from datasets import load_from_disk
+from datasets import load_dataset
 import matplotlib.pyplot as plt
 from pathlib import Path
 import typer
@@ -7,7 +7,7 @@ import torch
 
 def compute_statistics(datadir: str = "data/processed") -> None:
     """Compute dataset statistics."""
-    dataset = load_from_disk(datadir)
+    dataset = load_dataset(datadir)
 
     train_dataset = dataset["train"]
     test_dataset = dataset["test"]
