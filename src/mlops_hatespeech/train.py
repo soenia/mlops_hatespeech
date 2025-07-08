@@ -7,6 +7,7 @@ import numpy as np
 import torch
 import torch.nn as nn
 import typer
+import wandb
 from datasets import load_from_disk
 from hydra import compose, initialize
 from omegaconf import DictConfig
@@ -126,8 +127,21 @@ def train(
         overrides.append(f"hyperparameters.seed={seed}")
 
     cfg = get_config(overrides)
+
+    wandb.init(
+        project="mlops_hatespeech",
+        config={
+            "learning rate": cfg.hyperparameters.lr,
+            "weight decay": cfg.hyperparameters.wd,
+            "epochs": cfg.hyperparameters.epochs,
+            "model": MODEL_STR,
+        },
+    )
+
     trainer = train_model(cfg)
     logger.info("Training is done.")
+
+    wandb.finish()
 
 
 if __name__ == "__main__":
