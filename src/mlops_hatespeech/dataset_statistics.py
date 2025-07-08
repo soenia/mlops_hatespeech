@@ -1,4 +1,4 @@
-from datasets import load_from_disk
+from datasets import load_from_disk, DatasetDict
 import matplotlib.pyplot as plt
 from pathlib import Path
 import typer
@@ -7,7 +7,14 @@ import torch
 
 def compute_statistics(datadir: str = "data/processed") -> None:
     """Compute dataset statistics."""
-    dataset = load_from_disk(datadir)
+
+    dataset = DatasetDict(
+        {
+            "train": load_from_disk(f"{datadir}/train"),
+            "validation": load_from_disk(f"{datadir}/validation"),
+            "test": load_from_disk(f"{datadir}/test"),
+        }
+    )
 
     train_dataset = dataset["train"]
     test_dataset = dataset["test"]
