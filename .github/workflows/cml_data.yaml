@@ -37,6 +37,15 @@ jobs:
       run: |
         dvc pull --no-run-cache
 
+    - name: Check content of data/processed
+      run: |
+        ls -lhR data/processed
+
+    - name: Debug pulled dataset content
+      run: |
+        echo "Listing data/processed:"
+        ls -lhR data/processed
+
     - name: Check data statistics
       run: |
         python src/mlops_hatespeech/dataset_statistics.py
