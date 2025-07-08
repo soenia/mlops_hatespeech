@@ -9,7 +9,7 @@ ROOT_DIR = Path(__file__).resolve().parents[2]
 DEFAULT_SAVE_PATH = ROOT_DIR / "data" / "processed"
 
 
-def load_and_prepare_dataset(split_val: float = 0.25, seed: int = 42, save_path: str = None):
+def load_and_prepare_dataset(split_val: float = 0.25, seed: int = 43, save_path: str = None):
     if save_path is None:
         save_path = DEFAULT_SAVE_PATH
     else:

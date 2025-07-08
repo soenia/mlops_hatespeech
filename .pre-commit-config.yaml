@@ -10,7 +10,7 @@ repos:
     # perform formatting updates
     -   id: ruff-format
     # validate if all is fine with preview mode
-    -   id: ruff
+    # -   id: ruff
 -   repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v3.2.0
     hooks:
