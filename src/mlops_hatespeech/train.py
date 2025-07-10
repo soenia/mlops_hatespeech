@@ -7,10 +7,11 @@ import numpy as np
 import torch
 import torch.nn as nn
 import typer
+import wandb
 from datasets import load_from_disk
 from hydra import compose, initialize
 from omegaconf import DictConfig
-from sklearn.metrics import accuracy_score, f1_score
+from sklearn.metrics import accuracy_score, f1_score, RocCurveDisplay
 from transformers import (
     AutoModelForSequenceClassification,
     AutoTokenizer,
@@ -19,6 +20,8 @@ from transformers import (
 )
 
 from mlops_hatespeech.model import MODEL_STR
+from mlops_hatespeech.logger import logger
+
 
 app = typer.Typer()
 
@@ -30,6 +33,7 @@ def get_config(overrides: Optional[List[str]]) -> DictConfig:
 
 
 def train_model(cfg: DictConfig) -> Trainer:
+    logger.info(f"Loading dataset from: {cfg.data_path}")
     ds = load_from_disk(cfg.data_path)
 
     idx2lbl = {
@@ -100,6 +104,32 @@ def train_model(cfg: DictConfig) -> Trainer:
     )
 
     trainer.train()
+
+    preds_output = trainer.predict(ds["validation"])
+    preds_probs = preds_output.predictions
+    labels = preds_output.label_ids
+
+    RocCurveDisplay.from_predictions(
+        labels,
+        preds_probs[:, 1],
+        name="ROC Curve",
+    )
+
+    wandb.log({"roc_curve": wandb.Image(plt.gcf())})
+    plt.close()
+
+    metrics = trainer.evaluate()
+
+    torch.save(model.state_dict(), "model.pth")
+    artifact = wandb.Artifact(
+        name="mlops_hatespeech_model",
+        type="model",
+        description="A model trained to detect hate speech in tweets.",
+        metadata=metrics,
+    )
+    artifact.add_file("model.pth")
+    wandb.log_artifact(artifact)
+
     return trainer
 
 
@@ -123,8 +153,21 @@ def train(
         overrides.append(f"hyperparameters.seed={seed}")
 
     cfg = get_config(overrides)
+
+    wandb.init(
+        project="mlops_hatespeech",
+        config={
+            "learning rate": cfg.hyperparameters.lr,
+            "weight decay": cfg.hyperparameters.wd,
+            "epochs": cfg.hyperparameters.epochs,
+            "model": MODEL_STR,
+        },
+    )
+
     trainer = train_model(cfg)
-    print("Training is done.")
+    logger.info("Training is done.")
+
+    wandb.finish()
 
 
 if __name__ == "__main__":
