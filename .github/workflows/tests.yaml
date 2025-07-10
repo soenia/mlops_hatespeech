@@ -31,6 +31,9 @@ jobs:
       shell: bash
       run: echo "PYTHONPATH=$PYTHONPATH:$(pwd)/src" >> $GITHUB_ENV
 
+    - name: Login to W&B
+      run: wandb login ${{ secrets.WANDB_API_KEY }}
+
     - name: Run tests with coverage
       run: |
         coverage run --source=src/mlops_hatespeech -m pytest -v
