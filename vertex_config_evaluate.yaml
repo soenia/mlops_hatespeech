@@ -11,4 +11,5 @@ workerPoolSpecs:
         - -c
         - |
           dvc pull data/processed.dvc && \
+          dvc pull logs/run1.dvc && \
           python src/mlops_hatespeech/evaluate.py
