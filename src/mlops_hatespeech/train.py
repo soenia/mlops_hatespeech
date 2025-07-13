@@ -21,7 +21,7 @@ app = typer.Typer()
 
 
 @app.command()
-def train(wd: float = 1e-3, lr: float = 2e-5, epochs: int = 5, seed: int = 42) -> None:
+def train(wd: float = 1e-2, lr: float = 2e-5, epochs: int = 5, seed: int = 42) -> None:
     """Train a model."""
     ds = load_from_disk("data/processed")
 
