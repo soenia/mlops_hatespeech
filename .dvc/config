@@ -1,5 +1,0 @@
-[core]
-    remote = remote_storage
-['remote "remote_storage"']
-    url = gs://new-dvc-bucket/
-    version_aware = true
