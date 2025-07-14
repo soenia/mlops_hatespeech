@@ -4,6 +4,8 @@ import typer
 from datasets import DatasetDict, concatenate_datasets, load_dataset
 from sklearn.model_selection import train_test_split
 
+from mlops_hatespeech.logger import logger
+
 ROOT_DIR = Path(__file__).resolve().parents[2]
 DEFAULT_SAVE_PATH = ROOT_DIR / "data" / "processed"
 
@@ -39,8 +41,16 @@ def load_and_prepare_dataset(seed: int = 42, save_path: str = None):
         "test": test_ds,
     })
 
+    # 2. Split train into train + val
+    logger.debug(f"Splitting dataset with split_val={split_val}, seed={seed}")
+    train_valid = ds["train"].train_test_split(test_size=split_val, seed=seed)
+
+    # 3. Recombine
+    full_dataset = DatasetDict({"train": train_valid["train"], "validation": train_valid["test"], "test": ds["test"]})
+
+    # 4. Save
     full_dataset.save_to_disk(str(save_path))
-    print(f"Dataset saved to {save_path}")
+    logger.info(f"Dataset saved to {save_path}")
 
 
 if __name__ == "__main__":

@@ -1,13 +1,17 @@
 import os
 import random
+from typing import List, Optional
 
 import matplotlib.pyplot as plt
 import numpy as np
 import torch
 import torch.nn as nn
 import typer
+import wandb
 from datasets import load_from_disk
-from sklearn.metrics import accuracy_score, f1_score
+from hydra import compose, initialize
+from omegaconf import DictConfig
+from sklearn.metrics import accuracy_score, f1_score, RocCurveDisplay
 from transformers import (
     AutoModelForSequenceClassification,
     AutoTokenizer,
@@ -16,14 +20,21 @@ from transformers import (
 )
 
 from mlops_hatespeech.model import MODEL_STR
+from mlops_hatespeech.logger import logger
+
 
 app = typer.Typer()
 
 
-@app.command()
-def train(wd: float = 1e-2, lr: float = 2e-5, epochs: int = 5, seed: int = 42) -> None:
-    """Train a model."""
-    ds = load_from_disk("data/processed")
+def get_config(overrides: Optional[List[str]]) -> DictConfig:
+    """Get the configuration from Hydra."""
+    with initialize(config_path="../..", job_name="train_app", version_base="1.1"):
+        return compose(config_name="config", overrides=overrides or [])
+
+
+def train_model(cfg: DictConfig) -> Trainer:
+    logger.info(f"Loading dataset from: {cfg.data_path}")
+    ds = load_from_disk(cfg.data_path)
 
     idx2lbl = {
         0: "non-hate",
@@ -59,30 +70,28 @@ def train(wd: float = 1e-2, lr: float = 2e-5, epochs: int = 5, seed: int = 42) -
         f1 = f1_score(y_true=labels, y_pred=pred_labels, average="weighted")
         acc = accuracy_score(y_true=labels, y_pred=pred_labels)
 
-        return {
-            "f1": f1,
-            "accuracy": acc
-        }
+        return {"f1": f1, "accuracy": acc}
+
     training_args = TrainingArguments(
         output_dir="./logs/run1",
-        per_device_train_batch_size=32,
-        per_gpu_eval_batch_size=128,
-        gradient_accumulation_steps=2,
-        learning_rate=lr,
-        weight_decay=wd,
-        num_train_epochs=epochs,
-        logging_strategy="steps",
-        logging_steps=100,
-        save_strategy="epoch",
-        eval_strategy="steps",
-        eval_steps=100,
-        save_total_limit=1,
-        seed=seed,
-        data_seed=seed,
-        dataloader_num_workers=0,
-        load_best_model_at_end=False,
-        report_to=None,
-        no_cuda=True,
+        per_device_train_batch_size=cfg.hyperparameters.per_device_train_batch_size,
+        per_gpu_eval_batch_size=cfg.hyperparameters.per_gpu_eval_batch_size,
+        gradient_accumulation_steps=cfg.hyperparameters.gradient_accumulation_steps,
+        learning_rate=cfg.hyperparameters.lr,
+        weight_decay=cfg.hyperparameters.wd,
+        num_train_epochs=cfg.hyperparameters.epochs,
+        logging_strategy=cfg.hyperparameters.logging_strategy,
+        logging_steps=cfg.hyperparameters.logging_steps,
+        save_strategy=cfg.hyperparameters.save_strategy,
+        eval_strategy=cfg.hyperparameters.eval_strategy,
+        eval_steps=cfg.hyperparameters.eval_steps,
+        save_total_limit=cfg.hyperparameters.save_total_limit,
+        seed=cfg.hyperparameters.seed,
+        data_seed=cfg.hyperparameters.seed,
+        dataloader_num_workers=cfg.hyperparameters.dataloader_num_workers,
+        load_best_model_at_end=cfg.hyperparameters.load_best_model_at_end,
+        report_to=cfg.hyperparameters.report_to,
+        use_cpu=cfg.hyperparameters.use_cpu,
     )
 
     trainer = Trainer(
@@ -93,8 +102,72 @@ def train(wd: float = 1e-2, lr: float = 2e-5, epochs: int = 5, seed: int = 42) -
         eval_dataset=ds["validation"],
         tokenizer=tokenizer,
     )
+
     trainer.train()
-    print("Training is done.")
+
+    preds_output = trainer.predict(ds["validation"])
+    preds_probs = preds_output.predictions
+    labels = preds_output.label_ids
+
+    RocCurveDisplay.from_predictions(
+        labels,
+        preds_probs[:, 1],
+        name="ROC Curve",
+    )
+
+    wandb.log({"roc_curve": wandb.Image(plt.gcf())})
+    plt.close()
+
+    metrics = trainer.evaluate()
+
+    torch.save(model.state_dict(), "model.pth")
+    artifact = wandb.Artifact(
+        name="mlops_hatespeech_model",
+        type="model",
+        description="A model trained to detect hate speech in tweets.",
+        metadata=metrics,
+    )
+    artifact.add_file("model.pth")
+    wandb.log_artifact(artifact)
+
+    return trainer
+
+
+@app.command()
+def train(
+    lr: Optional[float] = None,
+    wd: Optional[float] = None,
+    epochs: Optional[int] = None,
+    seed: Optional[int] = None,
+) -> None:
+    """Train a model."""
+
+    overrides = []
+    if lr is not None:
+        overrides.append(f"hyperparameters.lr={lr}")
+    if wd is not None:
+        overrides.append(f"hyperparameters.wd={wd}")
+    if epochs is not None:
+        overrides.append(f"hyperparameters.epochs={epochs}")
+    if seed is not None:
+        overrides.append(f"hyperparameters.seed={seed}")
+
+    cfg = get_config(overrides)
+
+    wandb.init(
+        project="mlops_hatespeech",
+        config={
+            "learning rate": cfg.hyperparameters.lr,
+            "weight decay": cfg.hyperparameters.wd,
+            "epochs": cfg.hyperparameters.epochs,
+            "model": MODEL_STR,
+        },
+    )
+
+    trainer = train_model(cfg)
+    logger.info("Training is done.")
+
+    wandb.finish()
 
 
 if __name__ == "__main__":

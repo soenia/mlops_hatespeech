@@ -20,11 +20,26 @@ jobs:
       uses: actions/setup-python@v5
       with:
         python-version: 3.11
+        cache: "pip"
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         pip install -r requirements_tests.txt
-    - name: Test with pytest
+
+    - name: Set PYTHONPATH
+      shell: bash
+      run: echo "PYTHONPATH=$PYTHONPATH:$(pwd)/src" >> $GITHUB_ENV
+
+    - name: Login to W&B
+      run: wandb login ${{ secrets.WANDB_API_KEY }}
+
+    - name: Run tests with coverage
       run: |
-        pytest -v
+        coverage run --source=src/mlops_hatespeech -m pytest -v
+        coverage report
+        coverage xml
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v2
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}

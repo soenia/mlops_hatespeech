@@ -13,3 +13,5 @@ google-api-python-client==2.173.0
 dvc-gs==3.0.2
 fsspec==2025.3.0
 dvc==3.60.1
+hydra-core==1.3.2
+wandb==0.21.0
