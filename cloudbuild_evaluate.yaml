@@ -1,0 +1,21 @@
+steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'Build evaluate container image'
+    args: [
+      'build',
+      '.',
+      '-t',
+      'europe-west1-docker.pkg.dev/mlops-hatespeech/hs-images/evaluate',
+      '-f',
+      'dockerfiles/evaluate.dockerfile'
+    ]
+
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'Push evaluate container image'
+    args: [
+      'push',
+      'europe-west1-docker.pkg.dev/mlops-hatespeech/hs-images/evaluate'
+    ]
+
+options:
+  logging: CLOUD_LOGGING_ONLY

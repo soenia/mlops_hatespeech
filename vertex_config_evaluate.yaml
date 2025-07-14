@@ -4,12 +4,12 @@ workerPoolSpecs:
       machineType: n1-highmem-2
     replicaCount: 1
     containerSpec:
-      imageUri: europe-west1-docker.pkg.dev/mlops-hatespeech/hs-images/data
+      imageUri: europe-west1-docker.pkg.dev/mlops-hatespeech/hs-images/evaluate
       command:
         - bash
       args:
         - -c
         - |
-          python src/mlops_hatespeech/data.py && \
-          dvc add data/processed && \
-          dvc push
+          dvc pull data/processed.dvc && \
+          dvc pull logs/run1.dvc && \
+          python src/mlops_hatespeech/evaluate.py
