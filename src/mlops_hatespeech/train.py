@@ -22,6 +22,7 @@ from transformers import (
 from mlops_hatespeech.model import MODEL_STR
 from mlops_hatespeech.logger import logger
 
+wandb.login(key=os.environ["WANDB_API_KEY"], relogin=True)
 
 app = typer.Typer()
 
