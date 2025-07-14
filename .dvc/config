@@ -1,5 +1,5 @@
 [core]
     remote = remote_storage
 ['remote "remote_storage"']
-    url = gs://mlops_hs_data/
+    url = gs://new-dvc-bucket/
     version_aware = true
