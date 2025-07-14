@@ -194,3 +194,4 @@ outputs/
 
 # WandB
 wandb/
+/data
