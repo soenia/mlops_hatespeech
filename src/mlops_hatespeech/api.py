@@ -4,10 +4,10 @@ from transformers import AutoTokenizer, AutoModelForSequenceClassification
 import torch
 import torch.nn.functional as f
 
-# from mlops_hatespeech.evaluate import find_latest_checkpoint
+from mlops_hatespeech.evaluate import find_latest_checkpoint
 
 # Import model from logs/run1
-path = "logs/run1/checkpoint-670"
+path = find_latest_checkpoint("logs/run1")
 
 model = AutoModelForSequenceClassification.from_pretrained(path)
 tokenizer = AutoTokenizer.from_pretrained(path)
