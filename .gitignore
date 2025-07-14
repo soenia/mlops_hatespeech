@@ -194,4 +194,3 @@ outputs/
 
 # WandB
 wandb/
-/data
