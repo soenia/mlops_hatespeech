@@ -22,8 +22,6 @@ from transformers import (
 from mlops_hatespeech.model import MODEL_STR
 from mlops_hatespeech.logger import logger
 
-wandb.login(key="c2f58591ace6d74472c0cc8e17533a4d893477a1", relogin=True)
-
 app = typer.Typer()
 
 
@@ -154,6 +152,8 @@ def train(
         overrides.append(f"hyperparameters.seed={seed}")
 
     cfg = get_config(overrides)
+
+    wandb.login(key=os.environ["WANDB_API_KEY"], relogin=True)
 
     wandb.init(
         project="mlops_hatespeech",
