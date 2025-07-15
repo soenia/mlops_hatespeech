@@ -6,16 +6,9 @@ workerPoolSpecs:
     replicaCount: 1
     containerSpec:
       imageUri: europe-west1-docker.pkg.dev/mlops-hatespeech/hs-images/train
-      env:
-        - name: WANDB_API_KEY
-          value: c2f58591ace6d74472c0cc8e17533a4d893477a1
       command:
         - bash
       args:
         - -c
         - |
-          wandb login --relogin && \
-          dvc pull data/processed.dvc && \
-          python src/mlops_hatespeech/train.py --epochs 10 && \
-          dvc add logs/run1 && \
-          dvc push
+          dvc pull data/processed.dvc
