@@ -1,12 +1,11 @@
 import requests
 import streamlit as st
-# from google.cloud import run_v2
 
 
 def classify_text(text, backend):
     headers = {"Content-Type": "application/json"}
     data = {"text": text}
-    url = f"{backend}/predict"  # nur /predict anhängen
+    url = f"{backend}/predict"
     try:
         response = requests.post(url, json=data, headers=headers, timeout=10)
         response.raise_for_status()
@@ -19,7 +18,7 @@ def classify_text(text, backend):
 def main():
     st.title("Text Classification")
 
-    backend = "https://bento-app-178847025464.europe-west1.run.app"
+    backend = "https://bert-app-178847025464.europe-west1.run.app"
     if backend is None:
         st.error("Backend URL not set!")
         return

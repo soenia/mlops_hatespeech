@@ -20,7 +20,8 @@ RUN pip install --no-cache-dir \
     pydantic \
     torch \
     transformers \
-    google-cloud-storage
+    google-cloud-storage \
+    prometheus-client
 
 # Copy source code
 COPY src/mlops_hatespeech/app.py /app/app.py
