@@ -19,6 +19,7 @@ COPY data/processed.dvc data/processed.dvc
 COPY logs/run1.dvc logs/run1.dvc
 COPY .dvc .dvc
 COPY .git .git
+COPY config.yaml config.yaml
 
 RUN pip install -r requirements.txt
 RUN pip install . --no-deps --no-cache-dir --verbose
