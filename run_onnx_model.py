@@ -21,7 +21,7 @@ onnx_outputs = ort_session.run(output_names, inputs_onnx)
 print("ONNX logits:", onnx_outputs[0])
 
 # === Load original PyTorch model ===
-pt_model = AutoModelForSequenceClassification.from_pretrained("logs/run1/checkpoint-370")
+pt_model = AutoModelForSequenceClassification.from_pretrained("logs/run1/checkpoint-670")
 pt_model.eval()
 with torch.no_grad():
     torch_outputs = pt_model(**inputs).logits

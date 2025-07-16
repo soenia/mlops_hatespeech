@@ -4,7 +4,7 @@ import onnx
 import os
 
 # === CONFIG ===
-checkpoint_path = "logs/run1/checkpoint-370"
+checkpoint_path = "logs/run1/checkpoint-670"
 model_name = "prajjwal1/bert-tiny"
 onnx_path = "bert_tiny.onnx"
 
