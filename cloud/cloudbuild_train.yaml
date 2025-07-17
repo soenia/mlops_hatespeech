@@ -5,7 +5,7 @@ steps:
     'build',
     '.',
     '-t',
-    'europe-west1-docker.pkg.dev/mlops-hatespeech/hs-images/train',
+    'europe-west1-docker.pkg.dev/mlops-hatespeech/hs-images/train-image',
     '-f',
     'dockerfiles/train.dockerfile'
   ]
@@ -14,7 +14,7 @@ steps:
   id: 'Push container image'
   args: [
     'push',
-    'europe-west1-docker.pkg.dev/mlops-hatespeech/hs-images/train'
+    'europe-west1-docker.pkg.dev/mlops-hatespeech/hs-images/train-image'
   ]
 options:
   logging: CLOUD_LOGGING_ONLY

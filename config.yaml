@@ -1,16 +1,3 @@
-data_path: "data/processed"
-baseOutputDirectory:
-  outputUriPrefix: gs://mlops_hs_data_europe_west1/logs/
-workerPoolSpecs:
-  - machineSpec:
-      machineType: n1-highmem-2
-    replicaCount: 1
-    containerSpec:
-      imageUri: europe-west1-docker.pkg.dev/mlops-hatespeech/hs-images/train-image:latest
-      command:
-        - bash
-        - -c
-        - python src/mlops_hatespeech/data.py && python src/mlops_hatespeech/train.py
 hyperparameters:
     lr: 2.0e-5
     wd: 1e-3

@@ -6,8 +6,8 @@ steps:
       - '-c'
       - |
         apk add --no-cache gettext
-        envsubst < vertex_config_train.yaml > vertex_config_train.yaml.tmp
-        mv vertex_config_train.yaml.tmp vertex_config_train.yaml
+        envsubst < cloud/vertex_config_train.yaml > cloud/vertex_config_train.yaml.tmp
+        mv cloud/vertex_config_train.yaml.tmp cloud/vertex_config_train.yaml
     secretEnv: ['WANDB_API_KEY']
 
   - name: 'gcr.io/cloud-builders/gcloud'
@@ -26,7 +26,7 @@ steps:
     ]
 
 substitutions:
-  _VERTEX_TRAIN_CONFIG: 'vertex_config_train.yaml'
+  _VERTEX_TRAIN_CONFIG: 'cloud/vertex_config_train.yaml'
 
 availableSecrets:
   secretManager:
