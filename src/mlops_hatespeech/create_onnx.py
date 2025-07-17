@@ -1,23 +1,22 @@
 import torch
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 import onnx
-import os
+from pathlib import Path
 
-# === CONFIG ===
-checkpoint_path = "logs/run1/checkpoint-670"
-model_name = "prajjwal1/bert-tiny"
-onnx_path = "bert_tiny.onnx"
+from mlops_hatespeech.model import MODEL_STR
 
-# === Load model and tokenizer ===
+# Pick one example checkpoint
+model_name = MODEL_STR
+checkpoint_path = Path(__file__).resolve().parents[2] / "logs" / "run1" / "checkpoint-1110"
+onnx_path = checkpoint_path.parent / "bert_tiny.onnx"
+
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 model = AutoModelForSequenceClassification.from_pretrained(checkpoint_path)
 model.eval()
 
-# === Prepare dummy input ===
 dummy_text = "This is a test sentence."
 inputs = tokenizer(dummy_text, return_tensors="pt")
 
-# === Export to ONNX ===
 torch.onnx.export(
     model,
     (inputs["input_ids"], inputs["attention_mask"]),
@@ -34,7 +33,6 @@ torch.onnx.export(
 
 print(f"Model exported to {onnx_path}")
 
-# === Verify the ONNX model ===
 onnx_model = onnx.load(onnx_path)
 print(onnx.helper.printable_graph(onnx_model.graph))
 print("ONNX model loaded and verified.")
