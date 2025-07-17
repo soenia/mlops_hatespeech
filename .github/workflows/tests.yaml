@@ -1,5 +1,8 @@
 name: "Run tests"
 
+env:
+  GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/gcp-key.json
+
 on:
   push:
     branches: [ master, main ]
@@ -33,6 +36,9 @@ jobs:
 
     - name: Login to W&B
       run: wandb login ${{ secrets.WANDB_API_KEY }}
+
+    - name: Write GCP credentials to disk
+      run: echo "${{ secrets.GCP_KEY_JSON }}" > $GOOGLE_APPLICATION_CREDENTIALS
 
     - name: Run tests with coverage
       run: |
