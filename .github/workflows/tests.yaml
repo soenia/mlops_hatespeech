@@ -36,7 +36,7 @@ jobs:
 
     - name: Write GCP credentials to disk
       run: |
-        echo "${{ secrets.GCP_KEY_JSON }}" > ${{ runner.temp }}/gcp-key.json
+        printf "%s" "${{ secrets.GCP_KEY_JSON }}" > ${{ runner.temp }}/gcp-key.json
         echo "GOOGLE_APPLICATION_CREDENTIALS=${{ runner.temp }}/gcp-key.json" >> $GITHUB_ENV
 
     - name: Run tests with coverage
