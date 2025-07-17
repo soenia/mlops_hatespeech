@@ -8,13 +8,13 @@ workerPoolSpecs:
       imageUri: europe-west1-docker.pkg.dev/mlops-hatespeech/hs-images/train-image
       env:
         - name: WANDB_API_KEY
-          value: "c2f58591ace6d74472c0cc8e17533a4d893477a1"
+          value: ${WANDB_API_KEY}
       command:
         - bash
       args:
         - -c
         - |
           dvc pull && \
-          python -u src/mlops_hatespeech/train.py --epochs 2 && \
+          python -u src/mlops_hatespeech/train.py --epochs 15 && \
           dvc add logs/run1 && \
           dvc push
