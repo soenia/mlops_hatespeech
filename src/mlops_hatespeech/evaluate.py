@@ -4,8 +4,12 @@ import numpy as np
 from datasets import load_from_disk
 from sklearn.metrics import accuracy_score, f1_score
 from transformers import AutoModelForSequenceClassification, AutoTokenizer, Trainer, TrainingArguments
+import json
+from google.cloud import storage
 
 from mlops_hatespeech.model import MODEL_STR
+
+BUCKET_NAME = "new-dvc-bucket"
 
 
 def find_latest_checkpoint(run_dir: str = "logs/run1") -> str:
@@ -57,7 +61,6 @@ def main():
     ds = ds.map(tokenize_seqs, batched=True)
     ds = ds.rename_column("label", "labels")
 
-    # Modell laden
     model = AutoModelForSequenceClassification.from_pretrained(checkpoint_path)
 
     training_args = TrainingArguments(
@@ -78,6 +81,17 @@ def main():
     eval_result = trainer.evaluate(eval_dataset=ds["test"])
     print("Evaluated the thing")
     print(eval_result)
+    output_path = "gen_perf.json"
+    with open(output_path, "w") as f:
+        json.dump(eval_result, f, indent=2)
+
+    # === 2. Datei in GCS hochladen ===
+    client = storage.Client(project="mlops-hs-project")
+    bucket = client.bucket(BUCKET_NAME)
+    blob = bucket.blob("logs/eval/gen_perf.json")
+    blob.upload_from_filename(output_path)
+
+    print("Uploaded results to Bucket.")
 
 
 if __name__ == "__main__":
