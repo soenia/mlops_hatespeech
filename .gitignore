@@ -10,6 +10,9 @@ logs/*
 # data
 data/*
 
+# Model is small but still ignore it
+*.onnx
+
 # keep this for dvc (and gitkeep)
 !data/processed.dvc
 !data/.gitkeep

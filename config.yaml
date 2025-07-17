@@ -6,7 +6,7 @@ workerPoolSpecs:
       machineType: n1-highmem-2
     replicaCount: 1
     containerSpec:
-      imageUri: europe-west1-docker.pkg.dev/mlops-hatespeech/hs-images/train:latest
+      imageUri: europe-west1-docker.pkg.dev/mlops-hatespeech/hs-images/train-image:latest
       command:
         - bash
         - -c

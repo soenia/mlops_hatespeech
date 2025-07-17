@@ -12,16 +12,13 @@ path = find_latest_checkpoint("logs/run1")
 model = AutoModelForSequenceClassification.from_pretrained(path)
 tokenizer = AutoTokenizer.from_pretrained(path)
 
-# === FastAPI initialisieren ===
 app = FastAPI(title="Hate Speech Detection API")
 
 
-# === Eingabeformat definieren ===
 class TextInput(BaseModel):
     text: str
 
 
-# === Inferenz-Endpunkt ===
 @app.post("/predict")
 def predict(input: TextInput):
     inputs = tokenizer(input.text, return_tensors="pt", truncation=True, padding=True)

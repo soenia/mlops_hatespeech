@@ -1,0 +1,20 @@
+serviceAccount: train-vm-sa@mlops-hatespeech.iam.gserviceaccount.com
+
+workerPoolSpecs:
+  - machineSpec:
+      machineType: n1-highmem-2
+    replicaCount: 1
+    containerSpec:
+      imageUri: europe-west1-docker.pkg.dev/mlops-hatespeech/hs-images/train-image
+      env:
+        - name: WANDB_API_KEY
+          value: ${WANDB_API_KEY}
+      command:
+        - bash
+      args:
+        - -c
+        - |
+          dvc pull && \
+          python -u src/mlops_hatespeech/train.py --epochs 15 && \
+          dvc add logs/run1 && \
+          dvc push
