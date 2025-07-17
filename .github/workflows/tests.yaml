@@ -1,8 +1,5 @@
 name: "Run tests"
 
-env:
-  GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/gcp-key.json
-
 on:
   push:
     branches: [ master, main ]
@@ -15,6 +12,8 @@ jobs:
     strategy:
       matrix:
         os: ["ubuntu-latest", "windows-latest", "macos-latest"]
+    env:
+      GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/gcp-key.json
 
     steps:
     - name: Checkout
