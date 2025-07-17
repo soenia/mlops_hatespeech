@@ -35,6 +35,8 @@ jobs:
       run: wandb login ${{ secrets.WANDB_API_KEY }}
 
     - name: Write GCP credentials to disk
+      env:
+        GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/gcp-key.json
       run: echo "${{ secrets.GCP_KEY_JSON }}" > $GOOGLE_APPLICATION_CREDENTIALS
 
     - name: Run tests with coverage
