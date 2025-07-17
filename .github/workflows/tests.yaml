@@ -39,6 +39,10 @@ jobs:
         printf "%s" "${{ secrets.GCP_KEY_JSON }}" > ${{ runner.temp }}/gcp-key.json
         echo "GOOGLE_APPLICATION_CREDENTIALS=${{ runner.temp }}/gcp-key.json" >> $GITHUB_ENV
 
+    - name: Validate JSON (remove later!)
+      run: |
+        cat ${{ runner.temp }}/gcp-key.json | jq .
+
     - name: Run tests with coverage
       env:
         GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/gcp-key.json
