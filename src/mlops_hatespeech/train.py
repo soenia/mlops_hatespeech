@@ -1,11 +1,13 @@
-import os
-import random
+"""
+Train script for hate speech classification using a transformer model (e.g. BERT).
+Includes preprocessing, training, evaluation, ROC plotting, and artifact logging with Weights & Biases.
+"""
+
 from typing import List, Optional
 
 import matplotlib.pyplot as plt
 import numpy as np
 import torch
-import torch.nn as nn
 import typer
 import wandb
 from datasets import load_from_disk
@@ -32,6 +34,15 @@ def get_config(overrides: Optional[List[str]]) -> DictConfig:
 
 
 def train_model(cfg: DictConfig) -> Trainer:
+    """
+    Load configuration using Hydra with optional overrides.
+
+    Args:
+        overrides (Optional[List[str]]): List of override strings
+
+    Returns:
+        DictConfig: Composed configuration object.
+    """
     logger.info(f"Loading dataset from: {cfg.data_path}")
     ds = load_from_disk(cfg.data_path)
 
@@ -134,13 +145,17 @@ def train_model(cfg: DictConfig) -> Trainer:
 
 @app.command()
 def train(
-    lr: Optional[float] = None,
-    wd: Optional[float] = None,
-    epochs: Optional[int] = None,
-    seed: Optional[int] = None,
+    lr: Optional[float] = None, wd: Optional[float] = None, epochs: Optional[int] = None, seed: Optional[int] = None
 ) -> None:
-    """Train a model."""
+    """
+    Entry point for training. Optionally override key hyperparameters.
 
+    Args:
+        lr (Optional[float]): Learning rate.
+        wd (Optional[float]): Weight decay.
+        epochs (Optional[int]): Number of training epochs.
+        seed (Optional[int]): Random seed.
+    """
     overrides = []
     if lr is not None:
         overrides.append(f"hyperparameters.lr={lr}")
@@ -153,7 +168,7 @@ def train(
 
     cfg = get_config(overrides)
 
-    wandb.login(key=os.environ["WANDB_API_KEY"], relogin=True)
+    # wandb.login(key=os.environ["WANDB_API_KEY"], relogin=True)
 
     wandb.init(
         project="mlops_hatespeech",
@@ -165,6 +180,7 @@ def train(
         },
     )
 
+    # Run the actual training
     trainer = train_model(cfg)
     logger.info("Training is done.")
 

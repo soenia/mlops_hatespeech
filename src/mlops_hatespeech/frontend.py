@@ -7,7 +7,7 @@ def classify_text(text, backend):
     data = {"text": text}
     url = f"{backend}/predict"
     try:
-        response = requests.post(url, json=data, headers=headers, timeout=10)
+        response = requests.post(url, json=data, headers=headers, timeout=30)
         response.raise_for_status()
         return response.json()
     except Exception as e:

@@ -1,3 +1,6 @@
+data_path: "data/processed"
+baseOutputDirectory:
+    outputUriPrefix: gs://mlops_hs_data_europe_west1/logs/
 hyperparameters:
     lr: 2.0e-5
     wd: 1e-3

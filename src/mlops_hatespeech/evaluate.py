@@ -1,3 +1,14 @@
+"""
+Script for evaluating a fine-tuned hate speech classification model.
+
+- Finds the latest training checkpoint.
+- Loads and preprocesses the dataset.
+- Runs evaluation on the test set.
+- Computes accuracy and weighted F1 score.
+- Saves evaluation results as JSON.
+- Uploads the results JSON to a Google Cloud Storage bucket.
+"""
+
 import os
 import re
 import numpy as np
@@ -6,6 +17,7 @@ from sklearn.metrics import accuracy_score, f1_score
 from transformers import AutoModelForSequenceClassification, AutoTokenizer, Trainer, TrainingArguments
 import json
 from google.cloud import storage
+from typing import Dict, Any
 
 from mlops_hatespeech.model import MODEL_STR
 
@@ -13,7 +25,18 @@ BUCKET_NAME = "new-dvc-bucket"
 
 
 def find_latest_checkpoint(run_dir: str = "logs/run1") -> str:
-    # Find all checkpoints and we take the highest;)
+    """
+    Finds the latest checkpoint folder in the given directory based on the highest checkpoint number.
+
+    Args:
+        run_dir (str): Path to the directory containing checkpoint folders.
+
+    Returns:
+        str: Path to the latest checkpoint folder.
+
+    Raises:
+        FileNotFoundError: If no checkpoints are found.
+    """
     checkpoints = []
     pattern = re.compile(r"^checkpoint-(\d+)$")
     for name in os.listdir(run_dir):
@@ -29,7 +52,16 @@ def find_latest_checkpoint(run_dir: str = "logs/run1") -> str:
     return os.path.join(run_dir, latest_checkpoint)
 
 
-def compute_metrics(eval_preds):
+def compute_metrics(eval_preds: Any) -> Dict[str, float]:
+    """
+    Computes accuracy and weighted F1 score from model predictions and true labels.
+
+    Args:
+        eval_preds: An object with 'predictions' (logits) and 'label_ids' (true labels).
+
+    Returns:
+        Dict[str, float]: Dictionary with 'f1' and 'accuracy' scores.
+    """
     logits, labels = eval_preds.predictions, eval_preds.label_ids
     pred_labels = np.argmax(logits, axis=-1)
     f1 = f1_score(y_true=labels, y_pred=pred_labels, average="weighted")
@@ -41,10 +73,14 @@ def compute_metrics(eval_preds):
 
 
 def main():
-    # Load checkpoint
+    """
+    Main function: Loads the latest checkpoint, prepares the dataset,
+    runs evaluation, and uploads results as a JSON file to a GCS bucket.
+    """
+    # Load highest checkpoint
     checkpoint_path = find_latest_checkpoint()
 
-    # Data
+    # Load data
     ds = load_from_disk("data/processed")
 
     def is_valid(example):
@@ -53,8 +89,10 @@ def main():
 
     ds = ds.filter(is_valid)
 
+    # Load tokenizer
     tokenizer = AutoTokenizer.from_pretrained(MODEL_STR)
 
+    # Filter only valid examples where 'tweet' is a non-empty string
     def tokenize_seqs(examples):
         return tokenizer(examples["tweet"], truncation=True, max_length=512)
 
@@ -77,15 +115,17 @@ def main():
         tokenizer=tokenizer,
     )
 
-    # Evaluation
+    # Run evaluation on the test dataset
     eval_result = trainer.evaluate(eval_dataset=ds["test"])
     print("Evaluated the thing")
     print(eval_result)
-    output_path = "gen_perf.json"
+
+    # Save evaluation results as JSON
+    output_path = "logs/eval/gen_perf.json"
     with open(output_path, "w") as f:
         json.dump(eval_result, f, indent=2)
 
-    # === 2. Datei in GCS hochladen ===
+    # Upload results JSON file to GCS bucket
     client = storage.Client(project="mlops-hs-project")
     bucket = client.bucket(BUCKET_NAME)
     blob = bucket.blob("logs/eval/gen_perf.json")
