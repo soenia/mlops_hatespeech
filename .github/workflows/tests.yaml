@@ -34,7 +34,17 @@ jobs:
     - name: Login to W&B
       run: wandb login ${{ secrets.WANDB_API_KEY }}
 
+    - name: Write GCP key JSON file
+      env:
+        GCP_KEY_JSON: ${{ secrets.GCP_KEY_JSON }}
+        RUNNER_TEMP: ${{ runner.temp }}
+      run: |
+        printf "%s" "$GCP_KEY_JSON" > "$RUNNER_TEMP/gcp-key.json"
+        echo "GOOGLE_APPLICATION_CREDENTIALS=$RUNNER_TEMP/gcp-key.json" >> $GITHUB_ENV
+
     - name: Run tests with coverage
+      env:
+        GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/gcp-key.json
       run: |
         coverage run --source=src/mlops_hatespeech -m pytest -v
         coverage report

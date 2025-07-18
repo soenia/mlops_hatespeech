@@ -19,8 +19,9 @@ COPY data/processed.dvc data/processed.dvc
 COPY logs/run1.dvc logs/run1.dvc
 COPY .dvc .dvc
 COPY .git .git
+COPY config.yaml config.yaml
 
 RUN pip install -r requirements.txt
 RUN pip install . --no-deps --no-cache-dir --verbose
 
-ENTRYPOINT ["bash", "-c", "dvc pull data/processed.dvc && python -u src/mlops_hatespeech/train.py && dvc add logs/run1 && dvc push"]
+ENTRYPOINT ["bash", "-c", "dvc pull --force data/processed.dvc && python -u src/mlops_hatespeech/train.py && dvc add logs/run1 && dvc push"]

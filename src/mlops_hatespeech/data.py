@@ -1,4 +1,14 @@
+"""
+Script to download and prepare the hate speech Twitter dataset.
+
+- Downloads the dataset from Hugging Face (`thefrankhsu/hate_speech_twitter`)
+- Merges train and test splits into a single dataset
+- Shuffles and splits the data into train (70%), validation (15%), and test (15%)
+- Saves the resulting `DatasetDict` to disk for later use
+"""
+
 from pathlib import Path
+from typing import Optional
 
 import typer
 from datasets import DatasetDict, concatenate_datasets, load_dataset
@@ -11,22 +21,33 @@ ROOT_DIR = Path(__file__).resolve().parents[2]
 DEFAULT_SAVE_PATH = ROOT_DIR / "data" / "processed"
 
 
-def load_and_prepare_dataset(seed: int = 42, save_path: str = None):
+def load_and_prepare_dataset(seed: int = 42, save_path: Optional[str] = None) -> None:
+    """
+    Loads, merges, splits, and saves the hate speech dataset.
+
+    Args:
+        seed (int): Random seed for shuffling the dataset.
+        save_path (Optional[str]): Path to save the processed dataset.
+        If None, uses default path under /data/processed.
+
+    Returns:
+        None
+    """
     if save_path is None:
         save_path = DEFAULT_SAVE_PATH
     else:
         save_path = Path(save_path)
 
-    # 1. Load original dataset
+    # Load original dataset
     ds = load_dataset("thefrankhsu/hate_speech_twitter")
 
-    # 2. Concatenate train and test into one dataset
+    # Concatenate train and test into one dataset
     combined = concatenate_datasets([ds["train"], ds["test"]])
 
-    # 3. Shuffle for good measure
+    # Shuffle for good measure
     combined = combined.shuffle(seed=seed)
 
-    # 4. Split into train (70%), val (15%), test (15%)
+    # Split into train (70%), val (15%), test (15%)
     n = len(combined)
     train_size = int(0.7 * n)
     val_size = int(0.15 * n)
@@ -35,7 +56,7 @@ def load_and_prepare_dataset(seed: int = 42, save_path: str = None):
     val_ds = combined.select(range(train_size, train_size + val_size))
     test_ds = combined.select(range(train_size + val_size, n))
 
-    # 5. Combine into DatasetDict and save
+    # Combine into DatasetDict and save
     full_dataset = DatasetDict(
         {
             "train": train_ds,
@@ -44,13 +65,13 @@ def load_and_prepare_dataset(seed: int = 42, save_path: str = None):
         }
     )
 
-    # 2. Concatenate train and test into one dataset
+    # Concatenate train and test into one dataset
     combined = concatenate_datasets([ds["train"], ds["test"]])
 
-    # 3. Shuffle for good measure
+    # Shuffle for good measure
     combined = combined.shuffle(seed=seed)
 
-    # 4. Split into train (70%), val (15%), test (15%)
+    # Split into train (70%), val (15%), test (15%)
     n = len(combined)
     train_size = int(0.7 * n)
     val_size = int(0.15 * n)
@@ -59,7 +80,7 @@ def load_and_prepare_dataset(seed: int = 42, save_path: str = None):
     val_ds = combined.select(range(train_size, train_size + val_size))
     test_ds = combined.select(range(train_size + val_size, n))
 
-    # 5. Combine into DatasetDict and save
+    # Combine into DatasetDict and save
     full_dataset = DatasetDict(
         {
             "train": train_ds,
