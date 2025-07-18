@@ -74,19 +74,11 @@ will check the repositories and the code to verify your answers.
 
 ### Question 1
 > **Enter the group number you signed up on <learn.inside.dtu.dk>**
->
-> Answer:
 
-Group 1
+Group A
 
 ### Question 2
 > **Enter the study number for each member in the group**
->
-> Example:
->
-> *sXXXXXX, sXXXXXX, sXXXXXX*
->
-> Answer:
 
 12371375, 12590611
 
@@ -95,14 +87,8 @@ Group 1
 > **did you choose to work with and did it help you complete the project?**
 >
 > Recommended answer length: 100-200 words.
->
-> Example:
-> *We used the third-party framework ... in our project. We used functionality ... and functionality ... from the*
-> *package to do ... and ... in our project*.
->
-> Answer:
 
---- question 3 fill here ---
+We used the widely known and popular Huggingface package `transformers` as third-party package in our project. We used functionality for loading pretrained models and tokenizers from the package to do text classification in our project. The package also provided us with a lot of documentation and examples which helped us to quickly get started with our project. Additionally, we used the datasets package from Huggingface to load the dataset we used for training our model. The big variety of models enabled us to use a lightweight model that was able to run on our local machines without the need for a GPU.
 
 ## Coding environment
 
@@ -122,10 +108,15 @@ Group 1
 >
 > Answer:
 
-We used pip for managing our dependencies and filled out the `requirements.txt`, `requirements_dev.txt` and `
-It's also a possibility to auto-generate the list of dependencies using `pip freeze > requirements.txt`.
+We used pip for managing our dependencies. We managed dependencies using a combination of a `pyproject.toml` file and separate requirements.txt files, which we have continuously updated during the project: The `requirements.txt` file contains the packages needed to run the code, the `requirements_dev.txt` file contains the packages needed for development (e.g. ruff, precommit) and the `requirements_test.txt` file contains the packages needed for testing (e.g. pytest).The `pyproject.toml` includes project dynamic dependency declarations that reference our requirements.txt and requirements_dev.txt files. This setup allows us to build and install the project with setuptools in a clean and standardized way.
+
+To reproduce our exact development environment, one would have to run the following commands:
 
 ```bash
+conda create -n hatespeech_env python=3.11
+conda activate hatespeech_env
+pip install -e .
+```
 
 ### Question 5
 
@@ -133,15 +124,10 @@ It's also a possibility to auto-generate the list of dependencies using `pip fre
 > **code. What did you fill out? Did you deviate from the template in some way?**
 >
 > Recommended answer length: 100-200 words
->
-> Example:
-> *From the cookiecutter template we have filled out the ... , ... and ... folder. We have removed the ... folder*
-> *because we did not use any ... in our project. We have added an ... folder that contains ... for running our*
-> *experiments.*
->
-> Answer:
 
-From the cookiecutter template we have filled out the `src`, `reports`, and `tests` folder. We have removed the `docs` folder and the `notebooks` folder because we did not use any documentation or notebooks in our project.
+
+From the cookiecutter template we have filled out the `src`, `reports`, `data` and `tests` folder. We have removed the `docs` folder and the `notebooks` folder because we did not use any documentation or notebooks in our project. We also added a `cloud` folder, which contains yaml files with cloudbuild configurations and vertex AI configurations. The most relevant deviation from the template is that we have added a `logs` folder that contains trained model checkpoints and evaluation results.
+
 
 ### Question 6
 
@@ -150,13 +136,9 @@ From the cookiecutter template we have filled out the `src`, `reports`, and `tes
 >
 > Recommended answer length: 100-200 words.
 >
-> Example:
-> *We used ... for linting and ... for formatting. We also used ... for typing and ... for documentation. These*
-> *concepts are important in larger projects because ... . For example, typing ...*
->
 > Answer:
 
---- question 6 fill here ---
+We used `ruff` for linting. Additionally we did typing and we documented our code consistently. These concepts are important in larger projects because they help to maintain code quality and readability. They are also helpful to better understand the code and to avoid bugs.
 
 ## Version control
 
@@ -169,13 +151,10 @@ From the cookiecutter template we have filled out the `src`, `reports`, and `tes
 >
 > Recommended answer length: 50-100 words.
 >
-> Example:
-> *In total we have implemented X tests. Primarily we are testing ... and ... as these the most critical parts of our*
-> *application but also ... .*
->
 > Answer:
 
---- question 7 fill here ---
+We implemented 4 automatic tests in our code which we divided in two categories: unit tests and integration tests. The unit tests are testing the data loading and preprocessing and the the model training. The integration tests are testing wether the API of the backend (app.py) is working properly and as intended. The tests are run automatically using continuous integration on GitHub whenever we create a pull request or commit code to the main branch. The tests can also run locally using pytest.
+Furthermore we wrote a load test script (locustfile.py) which can simulate a load test of multiple users accessing the API at the same time. This script is not run automatically but can be run locally by any group member.
 
 ### Question 8
 
@@ -184,13 +163,9 @@ From the cookiecutter template we have filled out the `src`, `reports`, and `tes
 >
 > Recommended answer length: 100-200 words.
 >
-> Example:
-> *The total code coverage of code is X%, which includes all our source code. We are far from 100% coverage of our **
-> *code and even if we were then...*
->
 > Answer:
 
---- question 8 fill here ---
+The total code coverage of our code is 37% since some parts of our code are not covered by tests. We are far from 100% coverage of our code and even if we were then we would not trust it to be error free. The reason for this is that code coverage only measures how much of the code is executed during the tests, but it does not measure wether the code is error free or not. So it's possible to have a high code coverage, but still have bugs in the code.
 
 ### Question 9
 
@@ -198,10 +173,6 @@ From the cookiecutter template we have filled out the `src`, `reports`, and `tes
 > **pull request can help improve version control.**
 >
 > Recommended answer length: 100-200 words.
->
-> Example:
-> *We made use of both branches and PRs in our project. In our group, each member had an branch that they worked on in*
-> *addition to the main branch. To merge code we ...*
 >
 > Answer:
 
@@ -214,13 +185,9 @@ We made use of both branches and pull requests in our project. In particular, we
 >
 > Recommended answer length: 100-200 words.
 >
-> Example:
-> *We did make use of DVC in the following way: ... . In the end it helped us in ... for controlling ... part of our*
-> *pipeline*
->
 > Answer:
 
---- question 10 fill here ---
+We used DVC for tracking our data (`processed.dvc`) and model checkpoints (`run1.dvc`). Some of our containerized scripts (train.py, data.py and evaluate.py) use dvc pull and push in the corresponding yaml files to automatically pull the data and model checkpoints from the DVC remote storage. This way we can ensure that the data and model checkpoints are always in sync with the code.
 
 ### Question 11
 
@@ -230,14 +197,10 @@ We made use of both branches and pull requests in our project. In particular, we
 >
 > Recommended answer length: 200-300 words.
 >
-> Example:
-> *We have organized our continuous integration into 3 separate files: one for doing ..., one for running ... testing*
-> *and one for running ... . In particular for our ..., we used ... .An example of a triggered workflow can be seen*
-> *here: <weblink>*
->
 > Answer:
 
-We have organized our continuous integration into 2 separate files: one for doing unit testing and one for running linting. For the unit testing we used pytest and for the linting we used ruff. We also made use of caching to speed up the continuous integration and we use multiple operating systems (Linux, MacOS and Windows).
+We have organized our continuous integration into 2 separate files: one for doing unit testing and one for running linting. For the unit testing we used pytest and for the linting we used ruff. We also made use of caching to speed up the continuous integration and we use multiple operating systems (Linux, MacOS and Windows). We also implemented a workflow that triggers when data changes.
+Moreover, we added code coverage to our unit tests using the `coverage` package. The code coverage is then reported to Codecov and also a part of the continuous integration workflow with GitHub Actions.
 
 ## Running code and tracking experiments
 
@@ -256,7 +219,11 @@ We have organized our continuous integration into 2 separate files: one for doin
 >
 > Answer:
 
---- question 12 fill here ---
+The most relevant instance here is our train.py since it contains a lot of hyperparameters. We used a config file for reproducibility (see next section). We have configured the training script such that it can be run with a command line interface. The following command would run the training script with 10 epochs:
+
+```bash
+train --epochs 10
+```
 
 ### Question 13
 
@@ -271,7 +238,7 @@ We have organized our continuous integration into 2 separate files: one for doin
 >
 > Answer:
 
---- question 13 fill here ---
+We configured our experiments using Hydra, which allowed us to manage hyperparameters for our training script via a yaml config file. This made it easy to reproduce experiments and switch between configurations.
 
 ### Question 14
 
@@ -288,7 +255,10 @@ We have organized our continuous integration into 2 separate files: one for doin
 >
 > Answer:
 
---- question 14 fill here ---
+![wandb](figures/ROC.png)
+![wandb2](figures/wandb.png)
+We were tracking the ROC curve.
+
 
 ### Question 15
 
@@ -303,7 +273,23 @@ We have organized our continuous integration into 2 separate files: one for doin
 >
 > Answer:
 
---- question 15 fill here ---
+For our project we developed 6 docker images: one for data preprocessing, one for training, one for evaluation, two for the deployment backends (app.dockerfile and bento.dockerfile) and one for the frontend. Note that our actual application uses the app.dockerfile for deployment, but we also created a bento.dockerfile for testing purposes. For the latter we have a very slim image which even contains an onnx model.
+
+For instance, have a look at our at our BentoML App which is lightweight (small container). Note that this is only the backend.
+To pull the docker images, you can use the following command:
+
+```bash
+docker pull --platform=linux/amd64 europe-west1-docker.pkg.dev/mlops-hatespeech/hs-images/bento-app:latest
+```
+
+To run the docker image on a Mac, you can use the following command:
+
+```bash
+docker run --rm \
+  --platform=linux/amd64 \
+  -p 3000:3000 \
+  europe-west1-docker.pkg.dev/mlops-hatespeech/hs-images/bento-app:latest
+```
 
 ### Question 16
 
@@ -318,7 +304,7 @@ We have organized our continuous integration into 2 separate files: one for doin
 >
 > Answer:
 
---- question 16 fill here ---
+We primarily used logging and print statements to debug our code.
 
 ## Working in the cloud
 
@@ -335,7 +321,13 @@ We have organized our continuous integration into 2 separate files: one for doin
 >
 > Answer:
 
---- question 17 fill here ---
+We made use of the following GCP services:
+- **Cloud Storage**: Store data, reports, model weights, user requests
+- **Artifact Registry**: Store all docker images
+- **Cloud Build**: Build docker images and trigger workflows
+- **Vertex AI**: Train and deploy models
+- **Cloud Run**: Deploy the API
+- **Secret Manager**: Store secrets like the WANDB_API_KEY
 
 ### Question 18
 
@@ -349,8 +341,11 @@ We have organized our continuous integration into 2 separate files: one for doin
 > *using a custom container: ...*
 >
 > Answer:
+We used custom Vertex AI Jobs which internally rely on Google Cloud Compute Engine. For this we implemented containerized jobs, pulled from the artifact registry. Note that we also abused those Vertex AI Jobs to run our data preprocessing and evaluation scripts.
 
---- question 18 fill here ---
+Machine Type: n1-highmem-2
+We specified a service-account eligible for Vertex AI and Artifact Registry access.
+
 
 ### Question 19
 
@@ -359,7 +354,8 @@ We have organized our continuous integration into 2 separate files: one for doin
 >
 > Answer:
 
---- question 19 fill here ---
+![bucket](figures/GCPbucket.png)
+![bucket2](figures/bucket2.png)
 
 ### Question 20
 
@@ -368,7 +364,7 @@ We have organized our continuous integration into 2 separate files: one for doin
 >
 > Answer:
 
---- question 20 fill here ---
+![registry](figures/registry.jpg)
 
 ### Question 21
 
@@ -377,7 +373,7 @@ We have organized our continuous integration into 2 separate files: one for doin
 >
 > Answer:
 
---- question 21 fill here ---
+![build](figures/cloudbuild.jpg)
 
 ### Question 22
 
@@ -392,7 +388,7 @@ We have organized our continuous integration into 2 separate files: one for doin
 >
 > Answer:
 
---- question 22 fill here ---
+Our model training can be executed hierarchically, meaning that we use the same train.dockerfile for the cloud as for local execution. Since the training requires a WANDB_API_KEY environment variable, the vertex AI job a two-stage process with one stage including a placeholder in the vertex config file and the other stage starting a temporary alpine container injecting the secret from the GCP secret manager. The second stage then runs the training script with the WANDB_API_KEY environment variable set.
 
 ## Deployment
 
@@ -409,7 +405,7 @@ We have organized our continuous integration into 2 separate files: one for doin
 >
 > Answer:
 
---- question 23 fill here ---
+We have two apps for demonstration purposes: One uses FastAPI and the other uses BentoML. The FastAPI app is implemented in `app.py` and the BentoML app is implemented in `bento_app.py`. The FastAPI app is a simple API that takes a text input and returns a prediction of whether the text is hateful or not. We also added a frontend for the FastAPI app using Streamlit, which allows users to interact with the API in a more user-friendly way. Both apps are containerized using Docker and can be deployed in the cloud using Cloud Run. The FastAPI app is also able to log the predictions to the Cloud Bucket relevant for data drift detection.
 
 ### Question 24
 
@@ -425,7 +421,22 @@ We have organized our continuous integration into 2 separate files: one for doin
 >
 > Answer:
 
---- question 24 fill here ---
+We deployed our app locally using Docker and in the cloud using Cloud Run. The local deployment can be done by running the following command (assuming you have the docker image pulled with the command shown above):
+
+```bash
+docker run --rm \
+  --platform=linux/amd64 \
+  -p 3000:3000 \
+  europe-west1-docker.pkg.dev/mlops-hatespeech/hs-images/bento-app:latest
+```
+
+With the above command, the app starts locally.
+
+Try the backend API with the following link:
+https://bento-app-178847025464.europe-west1.run.app/
+
+Note that it might a while since our deployment is request based and a Kaltstart is required.
+
 
 ### Question 25
 
@@ -440,7 +451,10 @@ We have organized our continuous integration into 2 separate files: one for doin
 >
 > Answer:
 
---- question 25 fill here ---
+We performed unit testing of our API using pytest and load testing using Locust. The unit tests can be run using the command `pytest`.
+
+The results of load testing showed that the API does not crash under high load, but the average response time slightly increases when the number of users increases.
+![locust](figures/loadtest.png)
 
 ### Question 26
 
@@ -455,7 +469,7 @@ We have organized our continuous integration into 2 separate files: one for doin
 >
 > Answer:
 
---- question 26 fill here ---
+We implemented prometheus monitoring of our deployed model.
 
 ## Overall discussion of project
 
@@ -474,7 +488,9 @@ We have organized our continuous integration into 2 separate files: one for doin
 >
 > Answer:
 
---- question 27 fill here ---
+One group member forgot to stop a virtual machine, which led to higher costs.
+The Google Cloud Trial does not include GPU resources, so we couldn't use one of the services.
+
 
 ### Question 28
 
@@ -490,7 +506,8 @@ We have organized our continuous integration into 2 separate files: one for doin
 >
 > Answer:
 
---- question 28 fill here ---
+We implemented a frontend for our app that allows users to interact with the API in a more user-friendly way. The frontend is implemented using Streamlit and is able to send requests to the API and display the results. We also added a drift detection service that monitors the requests including input and prediction of the API and logs them to the Cloud Bucket. This allows us to detect if the data is drifting over time. The drift detection looks at the embeddings, keywords and class frequencies of the requests and compares them to the training data.
+
 
 ### Question 29
 
@@ -521,7 +538,7 @@ We have organized our continuous integration into 2 separate files: one for doin
 >
 > Answer:
 
---- question 30 fill here ---
+Debugging the cloud was one of the biggest challenges in the project, as well as secret management for the cloud. One team member could not build docker images locally, which made it difficult to test the code locally.
 
 ### Question 31
 
@@ -539,14 +556,8 @@ We have organized our continuous integration into 2 separate files: one for doin
 > *We have used ChatGPT to help debug our code. Additionally, we used GitHub Copilot to help write some of our code.*
 > Answer:
 
-fewafewubaofewnafioewnifowf ewafw afew afewafewafionewoanf waf ewonfieownaf fewnaiof newio fweanøf wea fewa
- fweafewa fewiagonwa ognwra'g
- wa
- gwreapig ipweroang w rag
- wa grwa
-  g
-  ew
-  gwea g
-  ew ag ioreabnguorwa bg̈́aw
-   wa
-   gew4igioera giroeahgi0wra gwa
+
+Student 12371375 set up the continuous integration and wrote most of the unit tests. They also calculate the code coverage, Wandb logging and sweeping.
+Student 12590611 was in charge of Docker, the cloud setup and the deployment of the APIs.
+General documentation and code maintenance was done by both team members.
+We have used ChatGPT to help debug our code.
