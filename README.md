@@ -45,20 +45,20 @@ The directory structure of the project looks like this:
 ├── reports/                        # Reports
 │   └── figures/
 ├── src/                            # Source code
-│   ├── mlops_hatespeech/
-│   │   ├── __init__.py
-│   │   ├── app.py                  # App via FastAPI
-│   │   ├── bentoml_service.py      # App via BentoML
-│   │   ├── create_onnx.py          # Create .onnx from our model
-│   │   ├── data.py                 # Preprocessing
-│   │   ├── dataset_statistics.py   # ?
-│   │   ├── drift_detector.py       # Creates data drift report
-│   │   ├── evaluate.py             # Takes test split and evaluates performance
-│   │   ├── frontend.py             # Frontend of our app
-│   │   ├── logger.py               # ?
-│   │   ├── model.py                # model string of our model
-│   │   ├── train.py                # Takes train split and trains the model
-│   │   └── visualize.py
+│   └── mlops_hatespeech/
+│       ├── __init__.py
+│       ├── app.py                  # App via FastAPI
+│       ├── bentoml_service.py      # App via BentoML
+│       ├── create_onnx.py          # Create .onnx from our model
+│       ├── data.py                 # Preprocessing
+│       ├── dataset_statistics.py   # ?
+│       ├── drift_detector.py       # Creates data drift report
+│       ├── evaluate.py             # Takes test split and evaluates performance
+│       ├── frontend.py             # Frontend of our app
+│       ├── logger.py               # ?
+│       ├── model.py                # model string of our model
+│       ├── train.py                # Takes train split and trains the model
+│       └── visualize.py
 ├── tests/                         # Tests
 │   ├── integrationtestss/
 │   │   └──  test_api.py            # Basic API test
