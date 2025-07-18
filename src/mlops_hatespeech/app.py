@@ -53,7 +53,18 @@ async def lifespan(app: FastAPI):
     print("Loading tokenizer and ONNX model...")
 
     tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
-    model = InferenceSession(MODEL_PATH)
+    try:
+        model = InferenceSession(MODEL_PATH)
+    except Exception as e:
+        print(f"Local model load failed: {e}")
+        tmp_model_path = "/tmp/bert_tiny.onnx"
+        client = storage.Client()
+        bucket = client.bucket(BUCKET_NAME)
+        blob = bucket.blob("logs/run1/bert_tiny.onnx")
+
+        blob.download_to_filename(tmp_model_path)
+        print("Loaded from bucket")
+        model = InferenceSession(tmp_model_path)
 
     print("Model and tokenizer loaded.")
     yield
