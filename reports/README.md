@@ -126,7 +126,7 @@ pip install -e .
 > Recommended answer length: 100-200 words
 
 
-From the cookiecutter template we have filled out the `src`, `reports`, `data` and `tests` folder. We have removed the `docs` folder and the `notebooks` folder because we did not use any documentation or notebooks in our project. We also added a `cloud` folder, which contains yaml files with cloudbuild configurations and vertex AI configurations. The most relevant deviation from the template is that we have added a `logs` folder that contains trained model checkpoints and evaluation results.
+From the cookiecutter template we have filled out the `src`, `reports`, `data`, `docs` and `tests` folder. We have removed the `notebooks` folder because we did not use any notebooks in our project. We also added a `cloud` folder, which contains yaml files with cloudbuild configurations and vertex AI configurations. The most relevant deviation from the template is that we have added a `logs` folder that contains trained model checkpoints and evaluation results.
 
 
 ### Question 6
