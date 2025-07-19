@@ -10,6 +10,9 @@ import numpy as np
 import torch
 import typer
 import wandb
+import cProfile
+import pstats
+import io
 from datasets import load_from_disk
 from hydra import compose, initialize
 from omegaconf import DictConfig
@@ -180,8 +183,20 @@ def train(
         },
     )
 
+    profiler = cProfile.Profile()
+    profiler.enable()
+
     # Run the actual training
     trainer = train_model(cfg)
+
+    profiler.disable()
+    s = io.StringIO()
+    ps = pstats.Stats(profiler, stream=s).sort_stats("cumtime")
+    ps.print_stats()
+
+    with open("reports/logs/train_profile.txt", "w") as f:
+        f.write(s.getvalue())
+
     logger.info("Training is done.")
 
     wandb.finish()
