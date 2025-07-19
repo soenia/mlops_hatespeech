@@ -43,13 +43,13 @@ jobs:
     - name: Login to W&B
       run: wandb login ${{ secrets.WANDB_API_KEY }}
 
-    - name: Write GCP key JSON file and set env var
+    - name: Write GCP key JSON file (cross-platform)
+      shell: bash
       env:
         GCP_KEY_JSON: ${{ secrets.GCP_KEY_JSON }}
-        RUNNER_TEMP: ${{ runner.temp }}
       run: |
-        printf "%s" "$GCP_KEY_JSON" > "$RUNNER_TEMP/gcp-key.json"
-        echo "GOOGLE_APPLICATION_CREDENTIALS=$RUNNER_TEMP/gcp-key.json" >> $GITHUB_ENV
+        echo "$GCP_KEY_JSON" > gcp-key.json
+        echo "GOOGLE_APPLICATION_CREDENTIALS=$(pwd)/gcp-key.json" >> $GITHUB_ENV
 
     - name: Run tests with coverage
       run: |
