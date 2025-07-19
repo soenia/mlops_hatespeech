@@ -86,7 +86,7 @@ Group A
 > **A requirement to the project is that you include a third-party package not covered in the course. What framework**
 > **did you choose to work with and did it help you complete the project?**
 >
-> Recommended answer length: 100-200 words.
+> Answer
 
 We used the widely known and popular Huggingface package `transformers` as third-party package in our project. We leveraged functionality for loading pretrained models and tokenizers from the package to do text classification in our project. The package also provided us with a lot of documentation and examples which helped us to quickly get started with our project. Additionally, we used the datasets package from Huggingface to load the dataset we used for training our model. The big variety of models enabled us to use a lightweight model that was able to run on our local machines without the need for a GPU.
 
@@ -99,9 +99,6 @@ We used the widely known and popular Huggingface package `transformers` as third
 
 > **Explain how you managed dependencies in your project? Explain the process a new team member would have to go**
 > **through to get an exact copy of your environment.**
->
-> Recommended answer length: 100-200 words
->
 >
 > Answer:
 
@@ -131,7 +128,7 @@ invoke test-requirements
 > **We expect that you initialized your project using the cookiecutter template. Explain the overall structure of your**
 > **code. What did you fill out? Did you deviate from the template in some way?**
 >
-> Recommended answer length: 100-200 words
+> Answer
 
 
 From the cookiecutter template we have filled out the `src`, `reports`, `data` and `tests` folder. We have removed the `docs` folder and the `notebooks` folder because we did not use any documentation or notebooks in our project. We also added a `cloud` folder, which contains yaml files with cloudbuild configurations and vertex AI configurations. The most relevant deviation from the template is that we have added a `logs` folder that contains trained model checkpoints and evaluation results.
@@ -141,9 +138,6 @@ From the cookiecutter template we have filled out the `src`, `reports`, `data` a
 
 > **Did you implement any rules for code quality and format? What about typing and documentation? Additionally,**
 > **explain with your own words why these concepts matters in larger projects.**
->
-> Recommended answer length: 100-200 words.
->
 > Answer:
 
 We used `ruff` for linting. Additionally we did typing and we documented our code consistently. These concepts are important in larger projects because they help to maintain code quality and readability. They are also helpful to better understand the code and to avoid bugs.
@@ -220,11 +214,6 @@ Moreover, we added code coverage to our unit tests using the `coverage` package.
 > **How did you configure experiments? Did you make use of config files? Explain with coding examples of how you would**
 > **run a experiment.**
 >
-> Recommended answer length: 50-100 words.
->
-> Example:
-> *We used a simple argparser, that worked in the following way: Python  my_script.py --lr 1e-3 --batch_size 25*
->
 > Answer:
 
 The most relevant instance here is our train.py since it contains a lot of hyperparameters. We used a config file for reproducibility (see next section). We have configured the training script such that it can be run with a command line interface. The following command would run the training script with 10 epochs:
@@ -238,9 +227,6 @@ train --epochs 10
 > **Reproducibility of experiments are important. Related to the last question, how did you secure that no information**
 > **is lost when running experiments and that your experiments are reproducible?**
 >
-> Recommended answer length: 100-200 words.
->
->
 > Answer:
 
 We configured our experiments using Hydra, which allowed us to manage hyperparameters for our training script via a yaml config file. This made it easy to reproduce experiments and switch between configurations.
@@ -251,8 +237,6 @@ We configured our experiments using Hydra, which allowed us to manage hyperparam
 > **service of your choice). This may include loss graphs, logged images, hyperparameter sweeps etc. You can take**
 > **inspiration from [this figure](figures/wandb.png). Explain what metrics you are tracking and why they are**
 > **important.**
->
-> Recommended answer length: 200-300 words + 1 to 3 screenshots.
 >
 > Answer:
 
@@ -271,8 +255,6 @@ In addition to metrics and plots, we logged the final trained model as a W&B art
 
 > **Docker is an important tool for creating containerized applications. Explain how you used docker in your**
 > **experiments/project? Include how you would run your docker images and include a link to one of your docker files.**
->
-> Recommended answer length: 100-200 words.
 >
 > Answer:
 
@@ -299,8 +281,6 @@ docker run --rm \
 > **When running into bugs while trying to run your experiments, how did you perform debugging? Additionally, did you**
 > **try to profile your code or do you think it is already perfect?**
 >
-> Recommended answer length: 100-200 words.
->
 > Answer:
 
 We didn’t encounter major bugs during our experiments, but when smaller issues came up we primarily used logging and print statements to solve them. Since we used Hugging Face’s Trainer class, much of the training pipeline was already well-optimized.
@@ -312,8 +292,6 @@ We didn’t encounter major bugs during our experiments, but when smaller issues
 ### Question 17
 
 > **List all the GCP services that you made use of in your project and shortly explain what each service does?**
->
-> Recommended answer length: 50-200 words.
 >
 > Answer:
 
@@ -329,8 +307,6 @@ We made use of the following GCP services:
 
 > **The backbone of GCP is the Compute engine. Explained how you made use of this service and what type of VMs**
 > **you used?**
->
-> Recommended answer length: 100-200 words.
 >
 > Answer:
 
@@ -370,8 +346,6 @@ We used custom Vertex AI Jobs which internally rely on Google Cloud Compute Engi
 > **Did you manage to train your model in the cloud using either the Engine or Vertex AI? If yes, explain how you did**
 > **it. If not, describe why.**
 >
-> Recommended answer length: 100-200 words.
->
 > Answer:
 
 Our model training can be executed hierarchically, meaning that we use the same train.dockerfile for the cloud as for local execution. Since the training requires a WANDB_API_KEY environment variable, the vertex AI job a two-stage process with one stage including a placeholder in the vertex config file and the other stage starting a temporary alpine (lightweight and only necessities) container injecting the secret from the GCP secret manager. The second stage then runs the training script with the WANDB_API_KEY environment variable set. All custom jobs can be seen in Vertex AI > Training > Custom Jobs > select correct region
@@ -383,8 +357,6 @@ Our model training can be executed hierarchically, meaning that we use the same 
 > **Did you manage to write an API for your model? If yes, explain how you did it and if you did anything special. If**
 > **not, explain how you would do it.**
 >
-> Recommended answer length: 100-200 words.
->
 > Answer:
 
 We have two apps for demonstration purposes: One uses FastAPI and the other uses BentoML. The FastAPI app is implemented in `app.py` and the BentoML app is implemented in `bento_app.py`. The FastAPI app is a simple API that takes a text input and returns a prediction of whether the text is hateful or not. We also added a frontend for this one using Streamlit, which allows users to interact with the API in a more user-friendly way. Both apps are containerized using Docker and can be deployed in the cloud using Cloud Run. The FastAPI app is also able to log the predictions to the Cloud Bucket relevant for data drift detection.
@@ -393,8 +365,6 @@ We have two apps for demonstration purposes: One uses FastAPI and the other uses
 
 > **Did you manage to deploy your API, either in locally or cloud? If not, describe why. If yes, describe how and**
 > **preferably how you invoke your deployed service?**
->
-> Recommended answer length: 100-200 words.
 >
 > Answer:
 
@@ -420,8 +390,6 @@ Note that it might a while since our deployment is request based and a Kaltstart
 > **Did you perform any unit testing and load testing of your API? If yes, explain how you did it and what results for**
 > **the load testing did you get. If not, explain how you would do it.**
 >
-> Recommended answer length: 100-200 words.
->
 > Answer:
 
 We performed unit testing of our API using pytest and load testing using Locust. The unit tests can be run using the command `pytest`.
@@ -435,12 +403,6 @@ The results of load testing showed that the API does not crash under high load, 
 > **Did you manage to implement monitoring of your deployed model? If yes, explain how it works. If not, explain how**
 > **monitoring would help the longevity of your application.**
 >
-> Recommended answer length: 100-200 words.
->
-> Example:
-> *We did not manage to implement monitoring. We would like to have monitoring implemented such that over time we could*
-> *measure ... and ... that would inform us about this ... behaviour of our application.*
->
 > Answer:
 
 We implemented basic monitoring for our deployed model using the prometheus_client library to expose a /metrics endpoint from our FastAPI app. The key metric we track is a prediction_error counter, which increments whenever the model or tokenizer fails to load, or an exception occurs during inference. This allows us to keep track of runtime issues such as model unavailability or invalid inputs.
@@ -453,12 +415,6 @@ We implemented basic monitoring for our deployed model using the prometheus_clie
 
 > **How many credits did you end up using during the project and what service was most expensive? In general what do**
 > **you think about working in the cloud?**
->
-> Recommended answer length: 100-200 words.
->
-> Example:
-> *Group member 1 used ..., Group member 2 used ..., in total ... credits was spend during development. The service*
-> *costing the most was ... due to ... . Working in the cloud was ...*
 >
 > Answer:
 
@@ -476,12 +432,6 @@ However, we also encountered some challenges, such as debugging cloud issues and
 > **a frontend for your API, use extra version control features, a drift detection service, a kubernetes cluster etc.**
 > **If yes, explain what you did and why.**
 >
-> Recommended answer length: 0-200 words.
->
-> Example:
-> *We implemented a frontend for our API. We did this because we wanted to show the user ... . The frontend was*
-> *implemented using ...*
->
 > Answer:
 
 We implemented a frontend for our app that allows users to interact with the API in a more user-friendly way. The frontend is implemented using Streamlit and is able to send requests to the API and display the results. We also added a drift detection service that monitors the requests including input and prediction of the API and logs them to the Cloud Bucket. This allows us to detect if the data is drifting over time. The drift detection looks at the embeddings, keywords and class frequencies of the requests and compares them to the training data.
@@ -492,13 +442,6 @@ We implemented a frontend for our app that allows users to interact with the API
 > **Include a figure that describes the overall architecture of your system and what services that you make use of.**
 > **You can take inspiration from [this figure](figures/overview.png). Additionally, in your own words, explain the**
 > **overall steps in figure.**
->
-> Recommended answer length: 200-400 words
->
-> Example:
->
-> *The starting point of the diagram is our local setup, where we integrated ... and ... and ... into our code.*
-> *Whenever we commit code and push to GitHub, it auto triggers ... and ... . From there the diagram shows ...*
 >
 > Answer:
 
@@ -518,11 +461,6 @@ When changes are committed and pushed to GitHub, GitHub Actions triggers our CI 
 > **Discuss the overall struggles of the project. Where did you spend most time and what did you do to overcome these**
 > **challenges?**
 >
-> Recommended answer length: 200-400 words.
->
-> Example:
-> *The biggest challenges in the project was using ... tool to do ... . The reason for this was ...*
->
 > Answer:
 
 Everything is harder in the cloud. For some things you need to wait for a long time for some sequential jobs to finish only to see that they might have failed. Therefore debugging the cloud was one of the biggest challenges in the project. Secret management was also challenging; especially the complex training job relies on correctly injecting all credentials, i.e. the wandb-key or linking the data storage correctly with the right servie account. Lastly: Resources. Docker can be intense to build, especially on Windows machines. One team member could not build docker images locally, which made it difficult to test the code locally.
@@ -533,14 +471,6 @@ Everything is harder in the cloud. For some things you need to wait for a long t
 > **make sure all members contributed actively to the project. Additionally, state if/how you have used generative AI**
 > **tools in your project.**
 >
-> Recommended answer length: 50-300 words.
->
-> Example:
-> *Student sXXXXXX was in charge of developing of setting up the initial cookie cutter project and developing of the*
-> *docker containers for training our applications.*
-> *Student sXXXXXX was in charge of training our models in the cloud and deploying them afterwards.*
-> *All members contributed to code by...*
-> *We have used ChatGPT to help debug our code. Additionally, we used GitHub Copilot to help write some of our code.*
 > Answer:
 
 
