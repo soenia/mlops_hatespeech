@@ -43,13 +43,24 @@ jobs:
     - name: Login to W&B
       run: wandb login ${{ secrets.WANDB_API_KEY }}
 
-    - name: Write GCP key JSON file (cross-platform)
+    - name: Write GCP key JSON file and set GOOGLE_APPLICATION_CREDENTIALS (Linux/macOS)
+      if: runner.os != 'Windows'
       shell: bash
       env:
         GCP_KEY_JSON: ${{ secrets.GCP_KEY_JSON }}
       run: |
         echo "$GCP_KEY_JSON" > gcp-key.json
         echo "GOOGLE_APPLICATION_CREDENTIALS=$(pwd)/gcp-key.json" >> $GITHUB_ENV
+
+    - name: Write GCP key JSON file and set GOOGLE_APPLICATION_CREDENTIALS (Windows)
+      if: runner.os == 'Windows'
+      shell: pwsh
+      env:
+        GCP_KEY_JSON: ${{ secrets.GCP_KEY_JSON }}
+      run: |
+        $path = "$PWD\gcp-key.json"
+        Set-Content -Path $path -Value $Env:GCP_KEY_JSON -Encoding utf8
+        echo "GOOGLE_APPLICATION_CREDENTIALS=$path" >> $Env:GITHUB_ENV
 
     - name: Run tests with coverage
       run: |
