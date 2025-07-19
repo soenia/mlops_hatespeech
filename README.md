@@ -12,9 +12,10 @@ We are using a labeled [Huggingface dataset](https://huggingface.co/datasets/the
 
 The directory structure of the project looks like this:
 ```txt
-├── .github/                        # Github actions and dependabot
-│   ├── dependabot.yaml
+├── .github/                        # Github actions
 │   └── workflows/
+│       ├── cml_data.yaml
+│       ├── codecheck.yaml
 │       └── tests.yaml
 ├── cloud/                          # Cloud Configuration files
 │   ├── cloudbuild_app.yaml
@@ -41,9 +42,9 @@ The directory structure of the project looks like this:
 ├── logs/                           # Model logs (Evaluation & Checkpoints)
 │   ├── eval/
 │   └── run1/
-├── notebooks/                      # Jupyter notebooks
 ├── reports/                        # Reports
-│   └── figures/
+│   ├── figures/
+│   └── report.html
 ├── src/                            # Source code
 │   └── mlops_hatespeech/
 │       ├── __init__.py
@@ -51,16 +52,15 @@ The directory structure of the project looks like this:
 │       ├── bentoml_service.py      # App via BentoML
 │       ├── create_onnx.py          # Create .onnx from our model
 │       ├── data.py                 # Preprocessing
-│       ├── dataset_statistics.py   # ?
+│       ├── dataset_statistics.py   # Creates dataset statistics report
 │       ├── drift_detector.py       # Creates data drift report
 │       ├── evaluate.py             # Takes test split and evaluates performance
 │       ├── frontend.py             # Frontend of our app
-│       ├── logger.py               # ?
+│       ├── logger.py               # Logger for the project
 │       ├── model.py                # model string of our model
-│       ├── train.py                # Takes train split and trains the model
-│       └── visualize.py
+│       └── train.py                # Takes train split and trains the model
 ├── tests/                         # Tests
-│   ├── integrationtestss/
+│   ├── integrationtests/
 │   │   └──  test_api.py            # Basic API test
 │   ├── performancetests/
 │   │   └──  locustfile.py          # Load test
@@ -73,11 +73,13 @@ The directory structure of the project looks like this:
 ├── .dvcignore
 ├── .gitignore
 ├── .pre-commit-config.yaml
+├── config.yaml
 ├── LICENSE
 ├── pyproject.toml                  # Python project file
 ├── README.md                       # Project README
 ├── requirements.txt                # Project requirements
 ├── requirements_dev.txt            # Development requirements
+├── requirements_test.txt           # Test requirements
 └── tasks.py                        # Project tasks
 ```
 
