@@ -58,7 +58,7 @@ async def lifespan(app: FastAPI):
     except Exception as e:
         print(f"Local model load failed: {e}")
         tmp_model_path = "/tmp/bert_tiny.onnx"
-        client = storage.Client()
+        client = storage.Client(project="mlops-hs-project")
         bucket = client.bucket(BUCKET_NAME)
         blob = bucket.blob("logs/run1/bert_tiny.onnx")
 

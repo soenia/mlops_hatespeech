@@ -43,17 +43,26 @@ jobs:
     - name: Login to W&B
       run: wandb login ${{ secrets.WANDB_API_KEY }}
 
-    - name: Write GCP key JSON file
+    - name: Write GCP key JSON file and set GOOGLE_APPLICATION_CREDENTIALS (Linux/macOS)
+      if: runner.os != 'Windows'
+      shell: bash
       env:
         GCP_KEY_JSON: ${{ secrets.GCP_KEY_JSON }}
-        RUNNER_TEMP: ${{ runner.temp }}
       run: |
-        printf "%s" "$GCP_KEY_JSON" > "$RUNNER_TEMP/gcp-key.json"
-        echo "GOOGLE_APPLICATION_CREDENTIALS=$RUNNER_TEMP/gcp-key.json" >> $GITHUB_ENV
+        echo "$GCP_KEY_JSON" > gcp-key.json
+        echo "GOOGLE_APPLICATION_CREDENTIALS=$(pwd)/gcp-key.json" >> $GITHUB_ENV
+
+    - name: Write GCP key JSON file and set GOOGLE_APPLICATION_CREDENTIALS (Windows)
+      if: runner.os == 'Windows'
+      shell: pwsh
+      env:
+        GCP_KEY_JSON: ${{ secrets.GCP_KEY_JSON }}
+      run: |
+        $path = "$PWD\gcp-key.json"
+        Set-Content -Path $path -Value $Env:GCP_KEY_JSON -Encoding utf8
+        "GOOGLE_APPLICATION_CREDENTIALS=$path" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf8 -Append
 
     - name: Run tests with coverage
-      env:
-        GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/gcp-key.json
       run: |
         coverage run --source=src/mlops_hatespeech -m pytest -v
         coverage report
