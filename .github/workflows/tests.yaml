@@ -27,9 +27,18 @@ jobs:
         pip install -r requirements.txt
         pip install -r requirements_tests.txt
 
-    - name: Set PYTHONPATH
+    - name: Set PYTHONPATH (Linux/macOS)
+      if: runner.os != 'Windows'
       shell: bash
       run: echo "PYTHONPATH=$PYTHONPATH:$(pwd)/src" >> $GITHUB_ENV
+
+    - name: Set PYTHONPATH (Windows)
+      if: runner.os == 'Windows'
+      shell: pwsh
+      run: |
+        $current = $Env:PYTHONPATH
+        $new = "$current;${PWD}\src"
+        echo "PYTHONPATH=$new" >> $Env:GITHUB_ENV
 
     - name: Login to W&B
       run: wandb login ${{ secrets.WANDB_API_KEY }}
