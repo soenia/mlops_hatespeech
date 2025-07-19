@@ -9,14 +9,32 @@ for efficient inference in environments such as ONNX Runtime or TensorRT.
 
 import torch
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
-import onnx
+from google.cloud import storage
 from pathlib import Path
+import onnx
 
 from mlops_hatespeech.model import MODEL_STR
 
-# Pick one example checkpoint
-model_name = MODEL_STR
+bucket_name = "new-dvc-bucket"
+gcs_checkpoint_prefix = "logs/run1/checkpoint-1110"
 checkpoint_path = Path(__file__).resolve().parents[2] / "logs" / "run1" / "checkpoint-1110"
+
+client = storage.Client(project="mlops-hs-project")
+bucket = client.bucket(bucket_name)
+
+checkpoint_path.mkdir(parents=True, exist_ok=True)
+
+blobs = bucket.list_blobs(prefix=gcs_checkpoint_prefix)
+for blob in blobs:
+    if blob.name.endswith("/"):
+        continue
+    rel_path = Path(blob.name).relative_to(gcs_checkpoint_prefix)
+    dest_path = checkpoint_path / rel_path
+    dest_path.parent.mkdir(parents=True, exist_ok=True)
+    blob.download_to_filename(dest_path)
+    print(f"Downloaded {blob.name} to {dest_path}")
+
+model_name = MODEL_STR
 onnx_path = checkpoint_path.parent / "bert_tiny.onnx"
 
 # Load tokenizer and model
