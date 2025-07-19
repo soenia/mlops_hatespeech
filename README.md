@@ -16,6 +16,7 @@ The directory structure of the project looks like this:
 │   └── workflows/
 │       ├── cml_data.yaml
 │       ├── codecheck.yaml
+│       ├── deploy_docs.yaml
 │       └── tests.yaml
 ├── cloud/                          # Cloud Configuration files
 │   ├── cloudbuild_app.yaml
@@ -39,6 +40,7 @@ The directory structure of the project looks like this:
 │   ├── evaluate.Dockerfile
 │   ├── frontend.Dockerfile
 │   └── train.Dockerfile
+├── docs/                           # Documentation
 ├── logs/                           # Model logs (Evaluation & Checkpoints)
 │   ├── eval/
 │   └── run1/
@@ -75,11 +77,13 @@ The directory structure of the project looks like this:
 ├── .pre-commit-config.yaml
 ├── config.yaml
 ├── LICENSE
+├── mkdocs.yaml                     # Configuration for the documentation
 ├── pyproject.toml                  # Python project file
 ├── README.md                       # Project README
 ├── requirements.txt                # Project requirements
 ├── requirements_dev.txt            # Development requirements
 ├── requirements_test.txt           # Test requirements
+├── requirements_frontend.txt       # Frontend requirements
 └── tasks.py                        # Project tasks
 ```
 

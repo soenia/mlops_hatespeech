@@ -15,4 +15,4 @@ plugins:
 
 nav:
   - Home: index.md
-  - Documentation: source/my_api.md
+  - Documentation: source/docs.md
