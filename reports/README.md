@@ -503,7 +503,16 @@ We implemented a frontend for our app that allows users to interact with the API
 >
 > Answer:
 
---- question 29 fill here ---
+The starting point is our local development environment, where we developed the core components of the hate speech detection pipeline using Python. This includes modules for data preprocessing, model training, and evaluation. All source code is stored in a modular src/ structure.
+
+For data versioning, we use DVC. Our processed data, as well as trained model checkpoints and logs, are tracked using DVC. These large artifacts are stored in Google Cloud Storage buckets.
+
+Model training is tracked using Weights & Biases. Each training run is logged automatically, including metrics, loss curves, and hyperparameters.
+
+To ensure code quality, we use pre-commit hooks that run linters.
+When changes are committed and pushed to GitHub, GitHub Actions triggers our CI pipeline. This includes running unit tests, performing code style checks, calculating test coverage, which is reported using Codecov and building and deploying the documentation using mkdocs and mkdocs-material to GitHub Pages.
+
+![diagram](figures/chart.png)
 
 ### Question 30
 
