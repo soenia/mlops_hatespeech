@@ -13,20 +13,20 @@ will check the repositories and the code to verify your answers.
 * [x] Create the initial file structure using cookiecutter with an appropriate template (M6)
 * [x] Fill out the `data.py` file such that it downloads whatever data you need and preprocesses it (if necessary) (M6)
 * [x] Add a model to `model.py` and a training procedure to `train.py` and get that running (M6)
-* [ ] Remember to fill out the `requirements.txt` and `requirements_dev.txt` file with whatever dependencies that you
+* [x] Remember to fill out the `requirements.txt` and `requirements_dev.txt` file with whatever dependencies that you
     are using (M2+M6)
-* [ ] Remember to comply with good coding practices (`pep8`) while doing the project (M7)
-* [ ] Do a bit of code typing and remember to document essential parts of your code (M7)
+* [x] Remember to comply with good coding practices (`pep8`) while doing the project (M7)
+* [x] Do a bit of code typing and remember to document essential parts of your code (M7)
 * [x] Setup version control for your data or part of your data (M8)
 * [x] Add command line interfaces and project commands to your code where it makes sense (M9)
 * [x] Construct one or multiple docker files for your code (M10)
 * [x] Build the docker files locally and make sure they work as intended (M10)
-* [ ] Write one or multiple configurations files for your experiments (M11)
-* [ ] Used Hydra to load the configurations and manage your hyperparameters (M11)
+* [x] Write one or multiple configurations files for your experiments (M11)
+* [x] Used Hydra to load the configurations and manage your hyperparameters (M11)
 * [ ] Use profiling to optimize your code (M12)
 * [x] Use logging to log important events in your code (M14)
 * [x] Use Weights & Biases to log training progress and other important metrics/artifacts in your code (M14)
-* [ ] Consider running a hyperparameter optimization sweep (M14)
+* [x] Consider running a hyperparameter optimization sweep (M14)
 * [ ] Use PyTorch-lightning (if applicable) to reduce the amount of boilerplate in your code (M15)
 
 ### Week 2
@@ -36,39 +36,39 @@ will check the repositories and the code to verify your answers.
 * [x] Calculate the code coverage (M16)
 * [x] Get some continuous integration running on the GitHub repository (M17)
 * [x] Add caching and multi-os/python/pytorch testing to your continuous integration (M17)
-* [ ] Add a linting step to your continuous integration (M17)
+* [x] Add a linting step to your continuous integration (M17)
 * [x] Add pre-commit hooks to your version control setup (M18)
-* [ ] Add a continues workflow that triggers when data changes (M19)
+* [x] Add a continues workflow that triggers when data changes (M19)
 * [ ] Add a continues workflow that triggers when changes to the model registry is made (M19)
 * [x] Create a data storage in GCP Bucket for your data and link this with your data version control setup (M21)
 * [ ] Create a trigger workflow for automatically building your docker images (M21)
-* [ ] Get your model training in GCP using either the Engine or Vertex AI (M21)
-* [ ] Create a FastAPI application that can do inference using your model (M22)
-* [ ] Deploy your model in GCP using either Functions or Run as the backend (M23)
-* [ ] Write API tests for your application and setup continues integration for these (M24)
-* [ ] Load test your application (M24)
-* [ ] Create a more specialized ML-deployment API using either ONNX or BentoML, or both (M25)
-* [ ] Create a frontend for your API (M26)
+* [x] Get your model training in GCP using either the Engine or Vertex AI (M21)
+* [x] Create a FastAPI application that can do inference using your model (M22)
+* [x] Deploy your model in GCP using either Functions or Run as the backend (M23)
+* [x] Write API tests for your application and setup continues integration for these (M24)
+* [x] Load test your application (M24)
+* [x] Create a more specialized ML-deployment API using either ONNX or BentoML, or both (M25)
+* [x] Create a frontend for your API (M26)
 
 ### Week 3
 
-* [ ] Check how robust your model is towards data drifting (M27)
+* [x] Check how robust your model is towards data drifting (M27)
 * [ ] Deploy to the cloud a drift detection API (M27)
-* [ ] Instrument your API with a couple of system metrics (M28)
-* [ ] Setup cloud monitoring of your instrumented application (M28)
-* [ ] Create one or more alert systems in GCP to alert you if your app is not behaving correctly (M28)
+* [x] Instrument your API with a couple of system metrics (M28)
+* [x] Setup cloud monitoring of your instrumented application (M28)
+* [x] Create one or more alert systems in GCP to alert you if your app is not behaving correctly (M28)
 * [ ] If applicable, optimize the performance of your data loading using distributed data loading (M29)
 * [ ] If applicable, optimize the performance of your training pipeline by using distributed training (M30)
-* [ ] Play around with quantization, compilation and pruning for you trained models to increase inference speed (M31)
+* [x] Play around with quantization, compilation and pruning for you trained models to increase inference speed (M31)
 
 ### Extra
 
-* [ ] Write some documentation for your application (M32)
-* [ ] Publish the documentation to GitHub Pages (M32)
-* [ ] Revisit your initial project description. Did the project turn out as you wanted?
-* [ ] Create an architectural diagram over your MLOps pipeline
-* [ ] Make sure all group members have an understanding about all parts of the project
-* [ ] Uploaded all your code to GitHub
+* [x] Write some documentation for your application (M32)
+* [x] Publish the documentation to GitHub Pages (M32)
+* [x] Revisit your initial project description. Did the project turn out as you wanted?
+* [x] Create an architectural diagram over your MLOps pipeline
+* [x] Make sure all group members have an understanding about all parts of the project
+* [x] Uploaded all your code to GitHub
 
 ## Group information
 
@@ -88,7 +88,7 @@ Group A
 >
 > Recommended answer length: 100-200 words.
 
-We used the widely known and popular Huggingface package `transformers` as third-party package in our project. We used functionality for loading pretrained models and tokenizers from the package to do text classification in our project. The package also provided us with a lot of documentation and examples which helped us to quickly get started with our project. Additionally, we used the datasets package from Huggingface to load the dataset we used for training our model. The big variety of models enabled us to use a lightweight model that was able to run on our local machines without the need for a GPU.
+We used the widely known and popular Huggingface package `transformers` as third-party package in our project. We leveraged functionality for loading pretrained models and tokenizers from the package to do text classification in our project. The package also provided us with a lot of documentation and examples which helped us to quickly get started with our project. Additionally, we used the datasets package from Huggingface to load the dataset we used for training our model. The big variety of models enabled us to use a lightweight model that was able to run on our local machines without the need for a GPU.
 
 ## Coding environment
 
@@ -116,6 +116,17 @@ To reproduce our exact development environment, one would have to run the follow
 conda create -n hatespeech_env python=3.11
 conda activate hatespeech_env
 pip install -e .
+pip install -r requirements_dev.txt
+pip install -r requirements_tests.txt
+```
+
+You can also use invoke which is cool for commonly used commands. Try:
+```bash
+pip install invoke
+invoke create-environment
+invoke requirements
+invoke dev-requirements
+invoke test-requirements
 ```
 
 ### Question 5
@@ -153,7 +164,7 @@ We used `ruff` for linting. Additionally we did typing and we documented our cod
 >
 > Answer:
 
-We implemented 4 automatic tests in our code which we divided in two categories: unit tests and integration tests. The unit tests are testing the data loading and preprocessing and the the model training. The integration tests are testing wether the API of the backend (app.py) is working properly and as intended. The tests are run automatically using continuous integration on GitHub whenever we create a pull request or commit code to the main branch. The tests can also run locally using pytest.
+We implemented 4 automatic tests in our code which we divided in two categories: Unit tests and integration tests. The unit tests are testing the data loading, preprocessing and the the model training. The integration tests are testing wether the API of the backend (app.py) is working properly and as intended. The tests are run automatically using continuous integration on GitHub whenever we create a pull request or commit code to the main branch. The tests can also run locally using pytest.
 Furthermore we wrote a load test script (locustfile.py) which can simulate a load test of multiple users accessing the API at the same time. This script is not run automatically but can be run locally by any group member.
 
 ### Question 8
@@ -253,7 +264,7 @@ We configured our experiments using Hydra, which allowed us to manage hyperparam
 
 In our project, we used W&B to track and visualize our experiments. We logged metrics as well as models and visualizations.
 
-As seen in the first image, we logged a ROC curve during validation. The first curve is the ROC of a model trained with 2 epochs, while the second was trained with 5 epochs and the third with 10 epochs. The ROC curve is a metric used for binary classification tasks and therefore relevant for our hate speech detection model. We also tracked metrics such as accuracy and F1-score during evaluation. The F1-score is particularly important for this task due to the class imbalance in our dataset.
+As seen in the first image, we logged a ROC curve during validation. The first curve is the ROC of a model trained with 2 epochs, while the second was trained with 5 epochs and the third with 15 epochs. The ROC curve is a metric used for binary classification tasks and therefore relevant for our hate speech detection model. We also tracked metrics such as accuracy and F1-score during evaluation. The F1-score is particularly important for this task due to the class imbalance in our dataset.
 
 In the second image you can see the gradient norm during training in the first panel and the evaluation accuracy in the second panel. It is visible to see that the accuracy increases with the number of epochs.
 
@@ -319,7 +330,7 @@ We made use of the following GCP services:
 - **Cloud Storage**: Store data, reports, model weights, user requests
 - **Artifact Registry**: Store all docker images
 - **Cloud Build**: Build docker images and trigger workflows
-- **Vertex AI**: Train and deploy models
+- **Vertex AI**: Train models (we also abused this for evaluate.py and data.py)
 - **Cloud Run**: Deploy the API
 - **Secret Manager**: Store secrets like the WANDB_API_KEY
 
@@ -332,10 +343,7 @@ We made use of the following GCP services:
 >
 > Answer:
 
-We used custom Vertex AI Jobs which internally rely on Google Cloud Compute Engine. For this we implemented containerized jobs, pulled from the artifact registry. Note that we also abused those Vertex AI Jobs to run our data preprocessing and evaluation scripts.
-
-Machine Type: n1-highmem-2
-We specified a service-account eligible for Vertex AI and Artifact Registry access.
+We used custom Vertex AI Jobs which internally rely on Google Cloud Compute Engine. They're cool since they combine multiple steps into one: Create VM, loads container, runs it. For this we implemented containerized jobs, pulled from the artifact registry. Note that we also abused those Vertex AI Jobs to run our data preprocessing and evaluation scripts. Our Machine Type always were n1-highmem-2. We specified a service-account eligible for Vertex AI and Artifact Registry access.
 
 
 ### Question 19
@@ -375,7 +383,7 @@ We specified a service-account eligible for Vertex AI and Artifact Registry acce
 >
 > Answer:
 
-Our model training can be executed hierarchically, meaning that we use the same train.dockerfile for the cloud as for local execution. Since the training requires a WANDB_API_KEY environment variable, the vertex AI job a two-stage process with one stage including a placeholder in the vertex config file and the other stage starting a temporary alpine container injecting the secret from the GCP secret manager. The second stage then runs the training script with the WANDB_API_KEY environment variable set.
+Our model training can be executed hierarchically, meaning that we use the same train.dockerfile for the cloud as for local execution. Since the training requires a WANDB_API_KEY environment variable, the vertex AI job a two-stage process with one stage including a placeholder in the vertex config file and the other stage starting a temporary alpine (lightweight and only necessities) container injecting the secret from the GCP secret manager. The second stage then runs the training script with the WANDB_API_KEY environment variable set. All custom jobs can be seen in Vertex AI > Training > Custom Jobs > select correct region
 
 ## Deployment
 
@@ -388,7 +396,7 @@ Our model training can be executed hierarchically, meaning that we use the same 
 >
 > Answer:
 
-We have two apps for demonstration purposes: One uses FastAPI and the other uses BentoML. The FastAPI app is implemented in `app.py` and the BentoML app is implemented in `bento_app.py`. The FastAPI app is a simple API that takes a text input and returns a prediction of whether the text is hateful or not. We also added a frontend for the FastAPI app using Streamlit, which allows users to interact with the API in a more user-friendly way. Both apps are containerized using Docker and can be deployed in the cloud using Cloud Run. The FastAPI app is also able to log the predictions to the Cloud Bucket relevant for data drift detection.
+We have two apps for demonstration purposes: One uses FastAPI and the other uses BentoML. The FastAPI app is implemented in `app.py` and the BentoML app is implemented in `bento_app.py`. The FastAPI app is a simple API that takes a text input and returns a prediction of whether the text is hateful or not. We also added a frontend for this one using Streamlit, which allows users to interact with the API in a more user-friendly way. Both apps are containerized using Docker and can be deployed in the cloud using Cloud Run. The FastAPI app is also able to log the predictions to the Cloud Bucket relevant for data drift detection.
 
 ### Question 24
 
@@ -526,7 +534,7 @@ When changes are committed and pushed to GitHub, GitHub Actions triggers our CI 
 >
 > Answer:
 
-Debugging the cloud was one of the biggest challenges in the project, as well as secret management for the cloud. One team member could not build docker images locally, which made it difficult to test the code locally.
+Everything is harder in the cloud. For some things you need to wait for a long time for some sequential jobs to finish only to see that they might have failed. Therefore debugging the cloud was one of the biggest challenges in the project. Secret management was also challenging; especially the complex training job relies on correctly injecting all credentials, i.e. the wandb-key or linking the data storage correctly with the right servie account. Lastly: Resources. Docker can be intense to build, especially on Windows machines. One team member could not build docker images locally, which made it difficult to test the code locally.
 
 ### Question 31
 

@@ -59,7 +59,7 @@ The directory structure of the project looks like this:
 │       ├── logger.py               # Logger for the project
 │       ├── model.py                # model string of our model
 │       └── train.py                # Takes train split and trains the model
-├── tests/                         # Tests
+├── tests/                          # Tests
 │   ├── integrationtests/
 │   │   └──  test_api.py            # Basic API test
 │   ├── performancetests/
