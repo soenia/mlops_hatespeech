@@ -236,7 +236,7 @@ docker run --rm \
 <p>Recommended answer length: 100-200 words.</p>
 <p>Answer:</p>
 </blockquote>
-<p>We didn’t encounter major bugs during our experiments, but when smaller issues came up we primarily used logging and print statements to solve them. Since we used Hugging Face’s Trainer class, much of the training pipeline was already well-optimized. </p>
+<p>We didn’t encounter major bugs during our experiments, but when smaller issues came up we primarily used logging and print statements to solve them. Since we used Hugging Face’s Trainer class, much of the training pipeline was already well-optimized.</p>
 <h2>Working in the cloud</h2>
 <blockquote>
 <p>In the following section we would like to know more about your experience when developing in the cloud.</p>
@@ -385,7 +385,12 @@ However, we also encountered some challenges, such as debugging cloud issues and
 <em>Whenever we commit code and push to GitHub, it auto triggers ... and ... . From there the diagram shows ...</em></p>
 <p>Answer:</p>
 </blockquote>
-<p>--- question 29 fill here ---</p>
+<p>The starting point is our local development environment, where we developed the core components of the hate speech detection pipeline using Python. This includes modules for data preprocessing, model training, and evaluation. All source code is stored in a modular src/ structure.</p>
+<p>For data versioning, we use DVC. Our processed data, as well as trained model checkpoints and logs, are tracked using DVC. These large artifacts are stored in Google Cloud Storage buckets.</p>
+<p>Model training is tracked using Weights &amp; Biases. Each training run is logged automatically, including metrics, loss curves, and hyperparameters.</p>
+<p>To ensure code quality, we use pre-commit hooks that run linters.
+When changes are committed and pushed to GitHub, GitHub Actions triggers our CI pipeline. This includes running unit tests, performing code style checks, calculating test coverage, which is reported using Codecov and building and deploying the documentation using mkdocs and mkdocs-material to GitHub Pages.</p>
+<p><img alt="diagram" src="figures/chart.png" /></p>
 <h3>Question 30</h3>
 <blockquote>
 <p><strong>Discuss the overall struggles of the project. Where did you spend most time and what did you do to overcome these</strong>
@@ -413,4 +418,4 @@ Answer:</p>
 <p>Student 12371375 set up the continuous integration and wrote most of the unit tests. They also calculate the code coverage, Wandb logging and sweeping.
 Student 12590611 was in charge of Docker, the cloud setup and the deployment of the APIs.
 General documentation and code maintenance was done by both team members.
-We have used ChatGPT to help debug our code and GitHub Copilot to help write some of our code. </p>
+We have used ChatGPT to help debug our code and GitHub Copilot to help write some of our code.</p>
