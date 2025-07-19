@@ -249,16 +249,18 @@ We configured our experiments using Hydra, which allowed us to manage hyperparam
 >
 > Recommended answer length: 200-300 words + 1 to 3 screenshots.
 >
-> Example:
-> *As seen in the first image when have tracked ... and ... which both inform us about ... in our experiments.*
-> *As seen in the second image we are also tracking ... and ...*
->
 > Answer:
+
+In our project, we used W&B to track and visualize our experiments. We logged metrics as well as models and visualizations.
+
+As seen in the first image, we logged a ROC curve during validation. The first curve is the ROC of a model trained with 2 epochs, while the second was trained with 5 epochs and the third with 10 epochs. The ROC curve is a metric used for binary classification tasks and therefore relevant for our hate speech detection model. We also tracked metrics such as accuracy and F1-score during evaluation. The F1-score is particularly important for this task due to the class imbalance in our dataset.
+
+In the second image you can see the gradient norm during training in the first panel and the evaluation accuracy in the second panel. It is visible to see that the accuracy increases with the number of epochs.
+
+In addition to metrics and plots, we logged the final trained model as a W&B artifact, along with metadata such as evaluation scores. We also documented key hyperparameters such as learning rate, weight decay and number of epochs through W&B’s configuration tracking.
 
 ![wandb](figures/ROC.png)
 ![wandb2](figures/wandb.png)
-We were tracking the ROC curve.
-
 
 ### Question 15
 
@@ -266,10 +268,6 @@ We were tracking the ROC curve.
 > **experiments/project? Include how you would run your docker images and include a link to one of your docker files.**
 >
 > Recommended answer length: 100-200 words.
->
-> Example:
-> *For our project we developed several images: one for training, inference and deployment. For example to run the*
-> *training docker image: `docker run trainer:latest lr=1e-3 batch_size=64`. Link to docker file: <weblink>*
 >
 > Answer:
 
@@ -298,13 +296,9 @@ docker run --rm \
 >
 > Recommended answer length: 100-200 words.
 >
-> Example:
-> *Debugging method was dependent on group member. Some just used ... and others used ... . We did a single profiling*
-> *run of our main code at some point that showed ...*
->
 > Answer:
 
-We primarily used logging and print statements to debug our code.
+We didn’t encounter major bugs during our experiments, but when smaller issues came up we primarily used logging and print statements to solve them. Since we used Hugging Face’s Trainer class, much of the training pipeline was already well-optimized.
 
 ## Working in the cloud
 
@@ -336,11 +330,8 @@ We made use of the following GCP services:
 >
 > Recommended answer length: 100-200 words.
 >
-> Example:
-> *We used the compute engine to run our ... . We used instances with the following hardware: ... and we started the*
-> *using a custom container: ...*
->
 > Answer:
+
 We used custom Vertex AI Jobs which internally rely on Google Cloud Compute Engine. For this we implemented containerized jobs, pulled from the artifact registry. Note that we also abused those Vertex AI Jobs to run our data preprocessing and evaluation scripts.
 
 Machine Type: n1-highmem-2
@@ -382,10 +373,6 @@ We specified a service-account eligible for Vertex AI and Artifact Registry acce
 >
 > Recommended answer length: 100-200 words.
 >
-> Example:
-> *We managed to train our model in the cloud using the Engine. We did this by ... . The reason we choose the Engine*
-> *was because ...*
->
 > Answer:
 
 Our model training can be executed hierarchically, meaning that we use the same train.dockerfile for the cloud as for local execution. Since the training requires a WANDB_API_KEY environment variable, the vertex AI job a two-stage process with one stage including a placeholder in the vertex config file and the other stage starting a temporary alpine container injecting the secret from the GCP secret manager. The second stage then runs the training script with the WANDB_API_KEY environment variable set.
@@ -399,10 +386,6 @@ Our model training can be executed hierarchically, meaning that we use the same 
 >
 > Recommended answer length: 100-200 words.
 >
-> Example:
-> *We did manage to write an API for our model. We used FastAPI to do this. We did this by ... . We also added ...*
-> *to the API to make it more ...*
->
 > Answer:
 
 We have two apps for demonstration purposes: One uses FastAPI and the other uses BentoML. The FastAPI app is implemented in `app.py` and the BentoML app is implemented in `bento_app.py`. The FastAPI app is a simple API that takes a text input and returns a prediction of whether the text is hateful or not. We also added a frontend for the FastAPI app using Streamlit, which allows users to interact with the API in a more user-friendly way. Both apps are containerized using Docker and can be deployed in the cloud using Cloud Run. The FastAPI app is also able to log the predictions to the Cloud Bucket relevant for data drift detection.
@@ -413,11 +396,6 @@ We have two apps for demonstration purposes: One uses FastAPI and the other uses
 > **preferably how you invoke your deployed service?**
 >
 > Recommended answer length: 100-200 words.
->
-> Example:
-> *For deployment we wrapped our model into application using ... . We first tried locally serving the model, which*
-> *worked. Afterwards we deployed it in the cloud, using ... . To invoke the service an user would call*
-> *`curl -X POST -F "file=@file.json"<weburl>`*
 >
 > Answer:
 
@@ -433,7 +411,7 @@ docker run --rm \
 With the above command, the app starts locally.
 
 Try the backend API with the following link:
-https://bento-app-178847025464.europe-west1.run.app/
+[https://bento-app-178847025464.europe-west1.run.app](https://bento-app-178847025464.europe-west1.run.app)
 
 Note that it might a while since our deployment is request based and a Kaltstart is required.
 
@@ -445,15 +423,12 @@ Note that it might a while since our deployment is request based and a Kaltstart
 >
 > Recommended answer length: 100-200 words.
 >
-> Example:
-> *For unit testing we used ... and for load testing we used ... . The results of the load testing showed that ...*
-> *before the service crashed.*
->
 > Answer:
 
 We performed unit testing of our API using pytest and load testing using Locust. The unit tests can be run using the command `pytest`.
 
 The results of load testing showed that the API does not crash under high load, but the average response time slightly increases when the number of users increases.
+
 ![locust](figures/loadtest.png)
 
 ### Question 26
@@ -469,7 +444,7 @@ The results of load testing showed that the API does not crash under high load, 
 >
 > Answer:
 
-We implemented prometheus monitoring of our deployed model.
+We implemented basic monitoring for our deployed model using the prometheus_client library to expose a /metrics endpoint from our FastAPI app. The key metric we track is a prediction_error counter, which increments whenever the model or tokenizer fails to load, or an exception occurs during inference. This allows us to keep track of runtime issues such as model unavailability or invalid inputs.
 
 ## Overall discussion of project
 
@@ -488,8 +463,12 @@ We implemented prometheus monitoring of our deployed model.
 >
 > Answer:
 
-One group member forgot to stop a virtual machine, which led to higher costs.
-The Google Cloud Trial does not include GPU resources, so we couldn't use one of the services.
+The total cost of our project was approximately 104 €. The most expensive service was the Compute Engine, as one group member accidentally left a virtual machine running, which caused unexpectedly high costs. The second most expensive service was the Artifact Registry, which accounted for 2,78 €.
+The exact distribution of costs can be seen in the figure below.
+Working in the cloud was a valuable experience, since we were able to use its resources to train our model and deploy our app.
+However, we also encountered some challenges, such as debugging cloud issues and managing secrets in the cloud. And we think that the Google Cloud Platform is not always the most user-friendly platform, especially for beginners. Moreover, the free Google Cloud Trial does not include GPU resources, which limited our ability to experiment with larger models or faster training.
+
+![cloudcost](figures/cost.png)
 
 
 ### Question 28
@@ -560,4 +539,4 @@ Debugging the cloud was one of the biggest challenges in the project, as well as
 Student 12371375 set up the continuous integration and wrote most of the unit tests. They also calculate the code coverage, Wandb logging and sweeping.
 Student 12590611 was in charge of Docker, the cloud setup and the deployment of the APIs.
 General documentation and code maintenance was done by both team members.
-We have used ChatGPT to help debug our code.
+We have used ChatGPT to help debug our code and GitHub Copilot to help write some of our code.
