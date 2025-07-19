@@ -102,9 +102,6 @@ We used the widely known and popular Huggingface package `transformers` as third
 >
 > Recommended answer length: 100-200 words
 >
-> Example:
-> *We used ... for managing our dependencies. The list of dependencies was auto-generated using ... . To get a*
-> *complete copy of our development environment, one would have to run the following commands*
 >
 > Answer:
 
@@ -243,9 +240,6 @@ train --epochs 10
 >
 > Recommended answer length: 100-200 words.
 >
-> Example:
-> *We made use of config files. Whenever an experiment is run the following happens: ... . To reproduce an experiment*
-> *one would have to do ...*
 >
 > Answer:
 
@@ -270,8 +264,8 @@ In the second image you can see the gradient norm during training in the first p
 
 In addition to metrics and plots, we logged the final trained model as a W&B artifact, along with metadata such as evaluation scores. We also documented key hyperparameters such as learning rate, weight decay and number of epochs through W&B’s configuration tracking.
 
-![wandb](figures/ROC.png)
-![wandb2](figures/wandb.png)
+![wandb](figures/ROC.PNG)
+![wandb2](figures/wandb.PNG)
 
 ### Question 15
 
@@ -321,9 +315,6 @@ We didn’t encounter major bugs during our experiments, but when smaller issues
 >
 > Recommended answer length: 50-200 words.
 >
-> Example:
-> *We used the following two services: Engine and Bucket. Engine is used for... and Bucket is used for...*
->
 > Answer:
 
 We made use of the following GCP services:
@@ -353,7 +344,7 @@ We used custom Vertex AI Jobs which internally rely on Google Cloud Compute Engi
 >
 > Answer:
 
-![bucket](figures/GCPbucket.png)
+![bucket](figures/GCPbucket.PNG)
 ![bucket2](figures/bucket2.png)
 
 ### Question 20
@@ -437,7 +428,7 @@ We performed unit testing of our API using pytest and load testing using Locust.
 
 The results of load testing showed that the API does not crash under high load, but the average response time slightly increases when the number of users increases.
 
-![locust](figures/loadtest.png)
+![locust](figures/loadtest.jpg)
 
 ### Question 26
 
@@ -476,7 +467,7 @@ The exact distribution of costs can be seen in the figure below.
 Working in the cloud was a valuable experience, since we were able to use its resources to train our model and deploy our app.
 However, we also encountered some challenges, such as debugging cloud issues and managing secrets in the cloud. And we think that the Google Cloud Platform is not always the most user-friendly platform, especially for beginners. Moreover, the free Google Cloud Trial does not include GPU resources, which limited our ability to experiment with larger models or faster training.
 
-![cloudcost](figures/cost.png)
+![cloudcost](figures/costs.PNG)
 
 
 ### Question 28
