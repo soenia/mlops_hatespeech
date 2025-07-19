@@ -1,0 +1,18 @@
+site_name: Documentation of MLOps Hate Speech Project
+site_author: Sophie Hopp and Alexander Ulbrich
+docs_dir: docs
+
+theme:
+    language: en
+    name: material
+    features:
+    - content.code.copy
+    - content.code.annotate
+
+plugins:
+    - search
+    - mkdocstrings
+
+nav:
+  - Home: index.md
+  - Documentation: source/my_api.md

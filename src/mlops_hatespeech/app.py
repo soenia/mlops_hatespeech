@@ -1,21 +1,19 @@
 from fastapi import FastAPI, BackgroundTasks
 from pydantic import BaseModel
 from google.cloud import storage
-from transformers import AutoTokenizer, AutoModelForSequenceClassification
-import torch
-import tempfile
-import os
-import csv
+from transformers import AutoTokenizer
+from onnxruntime import InferenceSession
 from datetime import datetime
 from contextlib import asynccontextmanager
 from prometheus_client import Counter, make_asgi_app
 from fastapi import HTTPException
+import numpy as np
 
 import json
 from datetime import datetime
 
 BUCKET_NAME = "new-dvc-bucket"
-MODEL_PATH = "logs/run1/checkpoint-670"
+MODEL_PATH = "logs/run1/bert_tiny.onnx"
 MODEL_NAME = "prajjwal1/bert-tiny"
 
 model = None
@@ -29,16 +27,6 @@ app.mount("/metrics", make_asgi_app())
 
 class InputText(BaseModel):
     text: str
-
-
-def download_model_from_gcs(bucket_name, gcs_dir, local_dir):
-    client = storage.Client(project="mlops-hs-project")
-    blobs = client.list_blobs(bucket_name, prefix=gcs_dir)
-    for blob in blobs:
-        rel_path = os.path.relpath(blob.name, gcs_dir)
-        local_path = os.path.join(local_dir, rel_path)
-        os.makedirs(os.path.dirname(local_path), exist_ok=True)
-        blob.download_to_filename(local_path)
 
 
 def save_prediction_to_gcp(timestamp: str, input_text: str, prediction: str):
@@ -62,13 +50,23 @@ def save_prediction_to_gcp(timestamp: str, input_text: str, prediction: str):
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     global model, tokenizer
-    print("Loading model from GCS...")
-    tmpdir = tempfile.mkdtemp()
-    local_model_path = os.path.join(tmpdir, "model")
-    download_model_from_gcs(BUCKET_NAME, MODEL_PATH, local_model_path)
+    print("Loading tokenizer and ONNX model...")
+
     tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
-    model = AutoModelForSequenceClassification.from_pretrained(local_model_path)
-    print("Model loaded.")
+    try:
+        model = InferenceSession(MODEL_PATH)
+    except Exception as e:
+        print(f"Local model load failed: {e}")
+        tmp_model_path = "/tmp/bert_tiny.onnx"
+        client = storage.Client()
+        bucket = client.bucket(BUCKET_NAME)
+        blob = bucket.blob("logs/run1/bert_tiny.onnx")
+
+        blob.download_to_filename(tmp_model_path)
+        print("Loaded from bucket")
+        model = InferenceSession(tmp_model_path)
+
+    print("Model and tokenizer loaded.")
     yield
 
 
@@ -78,23 +76,34 @@ app.router.lifespan_context = lifespan
 @app.post("/predict")
 async def predict(input_data: InputText, background_tasks: BackgroundTasks):
     global model, tokenizer
-    if not model or not tokenizer:
+    if model is None or tokenizer is None:
         error_counter.inc()
         raise HTTPException(status_code=500, detail="Model or tokenizer not loaded.")
 
     try:
-        inputs = tokenizer(input_data.text, return_tensors="pt", truncation=True, padding=True)
-        with torch.no_grad():
-            outputs = model(**inputs)
-            prediction_idx = torch.argmax(outputs.logits, dim=-1).item()
+        # Tokenize input (return numpy arrays!)
+        encoded = tokenizer(input_data.text, return_tensors="np", truncation=True, padding=True)
+        ort_inputs = {
+            k: v.astype(np.int64) if v.dtype == np.int64 else v.astype(np.float32)
+            for k, v in encoded.items()
+            if k in {inp.name for inp in model.get_inputs()}
+        }
+
+        # ONNX model inference
+        outputs = model.run(None, ort_inputs)
+        logits = outputs[0]
+        prediction = int(np.argmax(logits, axis=-1)[0])
 
         label_map = {0: "non-hate", 1: "hate"}
-        predicted_label = label_map.get(prediction_idx, "unknown")
+        predicted_label = label_map.get(prediction, "unknown")
 
         now = datetime.utcnow().isoformat()
         background_tasks.add_task(save_prediction_to_gcp, now, input_data.text, predicted_label)
 
-        return {"input_text": input_data.text, "predicted_class": predicted_label}
+        return {
+            "input_text": input_data.text,
+            "predicted_class": predicted_label,
+        }
 
     except Exception as e:
         error_counter.inc()

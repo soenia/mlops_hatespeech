@@ -18,13 +18,15 @@ RUN pip install --no-cache-dir \
     fastapi \
     uvicorn \
     pydantic \
-    torch \
     transformers \
     google-cloud-storage \
-    prometheus-client
+    prometheus-client \
+    onnxruntime \
+    numpy
 
 # Copy source code
 COPY src/mlops_hatespeech/app.py /app/app.py
+COPY logs/run1/bert_tiny.onnx logs/run1/bert_tiny.onnx
 
 # Expose the port for Cloud Run
 EXPOSE $PORT
