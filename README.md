@@ -3,9 +3,6 @@ Text classification of hate speech for MLOps course summer term 2025.
 
 ## Project links
 
-You can access the application here:
-[Go to the App](https://frontend-178847025464.europe-west1.run.app/)
-
 Project documentation is available here:
 [View the Documentation](https://soenia.github.io/mlops_hatespeech/)
 
